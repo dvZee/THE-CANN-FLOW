@@ -5,7 +5,7 @@ import { ProductCard } from "../components/ProductCard";
 import { CategoryScroll } from "../components/CategoryScroll";
 import type { Product } from "../data/catalog";
 import { NavLink, useLoaderData } from "react-router";
-import { getProducts } from "../data/db.server";
+import { getProducts } from "../data/db.client";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -14,7 +14,7 @@ export function meta({}: Route.MetaArgs) {
   ];
 }
 
-export function loader() {
+export function clientLoader() {
   const products = getProducts();
   return { products };
 }
@@ -30,7 +30,7 @@ interface Slide {
 }
 
 export default function Home() {
-  const { products } = useLoaderData<typeof loader>();
+  const { products } = useLoaderData<typeof clientLoader>();
   const [searchQuery, setSearchQuery] = useState("");
   const [activeSlide, setActiveSlide] = useState(0);
 

@@ -3,7 +3,7 @@ import type { Route } from "./+types/deals";
 import { useCart, useNotifications } from "../context/CartContext";
 import type { Product } from "../data/catalog";
 import { useLoaderData } from "react-router";
-import { getProducts } from "../data/db.server";
+import { getProducts } from "../data/db.client";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -12,7 +12,7 @@ export function meta({}: Route.MetaArgs) {
   ];
 }
 
-export function loader() {
+export function clientLoader() {
   const allProducts = getProducts();
   // Only show flowers (Hybrid, Indica, Sativa) for Mix & Match
   const products = allProducts.filter(p => 
@@ -31,7 +31,7 @@ interface DealConfig {
 export default function Deals() {
   const { addToCart, happyHourActive } = useCart();
   const { showNotification } = useNotifications();
-  const { products } = useLoaderData<typeof loader>();
+  const { products } = useLoaderData<typeof clientLoader>();
   
   // Deal Builder state
   const [dealType, setDealType] = useState<"half" | "full">("full");

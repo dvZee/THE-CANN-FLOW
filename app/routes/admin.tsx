@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import type { Route } from "./+types/admin";
 import { useNotifications } from "../context/CartContext";
 import { type Product } from "../data/catalog";
-import { getProducts, saveProducts, getOrders, saveOrders, saveUploadedImage, type OrderSummary } from "../data/db.server";
+import { getProducts, saveProducts, getOrders, saveOrders, saveUploadedImage, type OrderSummary } from "../data/db.client";
 import { useLoaderData, useSubmit, useActionData } from "react-router";
 
 export function meta({}: Route.MetaArgs) {
@@ -12,10 +12,11 @@ export function meta({}: Route.MetaArgs) {
   ];
 }
 
-export async function loader({ request }: Route.LoaderArgs) {
-  // Read session cookie securely on the server
-  const cookieHeader = request.headers.get("Cookie") || "";
-  const isAuthorized = cookieHeader.includes("tcf_session=authorized");
+export async function clientLoader() {
+  if (typeof window === "undefined") {
+    return { isAuthorized: false, products: [] as Product[], orders: [] as OrderSummary[] };
+  }
+  const isAuthorized = sessionStorage.getItem("tcf_session") === "authorized";
 
   if (!isAuthorized) {
     return { isAuthorized: false, products: [] as Product[], orders: [] as OrderSummary[] };
@@ -26,49 +27,36 @@ export async function loader({ request }: Route.LoaderArgs) {
   return { isAuthorized: true, products, orders };
 }
 
-export async function action({ request }: Route.ActionArgs) {
+export async function clientAction({ request }: Route.ClientActionArgs) {
   try {
     const body = await request.json();
     const { type, payload: payloadStr } = body;
     const payload = JSON.parse(payloadStr);
 
-    // 1. Password Verification Action (Server-only check)
+    // 1. Password Verification Action (Client-side check)
     if (type === "LOGIN") {
-      const correctPassword = process.env.ADMIN_PASSWORD || "tcf-admin-2026";
+      const correctPassword = "tcf-admin-2026";
       if (payload.password === correctPassword) {
-        return Response.json(
-          { success: true, message: "Login successful" },
-          {
-            headers: {
-              "Set-Cookie": "tcf_session=authorized; Path=/; HttpOnly; SameSite=Lax; Max-Age=86400"
-            }
-          }
-        );
+        if (typeof window !== "undefined") {
+          sessionStorage.setItem("tcf_session", "authorized");
+        }
+        return { success: true, message: "Login successful" };
       } else {
-        return Response.json(
-          { success: false, error: "Incorrect admin password PIN. Please try again." },
-          { status: 401 }
-        );
+        return { success: false, error: "Incorrect admin password PIN. Please try again." };
       }
     }
 
     // 2. Clear Session / Logout Action
     if (type === "LOGOUT") {
-      return Response.json(
-        { success: true, message: "Logged out" },
-        {
-          headers: {
-            "Set-Cookie": "tcf_session=; Path=/; HttpOnly; SameSite=Lax; Max-Age=0"
-          }
-        }
-      );
+      if (typeof window !== "undefined") {
+        sessionStorage.removeItem("tcf_session");
+      }
+      return { success: true, message: "Logged out" };
     }
 
-    // 3. Security check: Guard all mutation operations on the server
-    const cookieHeader = request.headers.get("Cookie") || "";
-    const isAuthorized = cookieHeader.includes("tcf_session=authorized");
-    if (!isAuthorized) {
-      return Response.json({ success: false, error: "Unauthorized operation" }, { status: 403 });
+    // 3. Security check: Guard all mutation operations
+    if (typeof window !== "undefined" && sessionStorage.getItem("tcf_session") !== "authorized") {
+      return { success: false, error: "Unauthorized operation" };
     }
 
     if (type === "ADD_PRODUCT") {
@@ -98,7 +86,7 @@ export async function action({ request }: Route.ActionArgs) {
 
       products.push(newProduct);
       saveProducts(products);
-      return Response.json({ success: true, message: "Product added successfully" });
+      return { success: true, message: "Product added successfully" };
     }
 
     if (type === "EDIT_PRODUCT") {
@@ -130,14 +118,14 @@ export async function action({ request }: Route.ActionArgs) {
       });
 
       saveProducts(updatedProducts);
-      return Response.json({ success: true, message: "Product updated successfully" });
+      return { success: true, message: "Product updated successfully" };
     }
 
     if (type === "DELETE_PRODUCT") {
       const products = getProducts();
       const updatedProducts = products.filter(p => p.id !== payload.id);
       saveProducts(updatedProducts);
-      return Response.json({ success: true, message: "Product deleted successfully" });
+      return { success: true, message: "Product deleted successfully" };
     }
 
     if (type === "TOGGLE_FEATURED") {
@@ -149,7 +137,7 @@ export async function action({ request }: Route.ActionArgs) {
         return p;
       });
       saveProducts(updatedProducts);
-      return Response.json({ success: true, message: "Product featured status updated" });
+      return { success: true, message: "Product featured status updated" };
     }
 
     if (type === "UPDATE_ORDER_STATUS") {
@@ -161,31 +149,31 @@ export async function action({ request }: Route.ActionArgs) {
         return o;
       });
       saveOrders(updatedOrders);
-      return Response.json({ success: true, message: "Order status updated" });
+      return { success: true, message: "Order status updated" };
     }
 
     if (type === "DELETE_ORDER") {
       const orders = getOrders();
       const updatedOrders = orders.filter(o => o.orderId !== payload.orderId);
       saveOrders(updatedOrders);
-      return Response.json({ success: true, message: "Order deleted successfully" });
+      return { success: true, message: "Order deleted successfully" };
     }
 
     if (type === "CLEAR_ORDERS") {
       saveOrders([]);
-      return Response.json({ success: true, message: "All orders cleared" });
+      return { success: true, message: "All orders cleared" };
     }
 
-    return Response.json({ success: false, error: "Invalid action type" }, { status: 400 });
+    return { success: false, error: "Invalid action type" };
   } catch (error) {
     console.error("Admin action error", error);
-    return Response.json({ success: false, error: "Server error occurred" }, { status: 500 });
+    return { success: false, error: "Server error occurred" };
   }
 }
 
 export default function Admin() {
-  const { isAuthorized, products, orders } = useLoaderData<typeof loader>();
-  const actionData = useActionData() as { success: boolean; error?: string } | undefined;
+  const { isAuthorized, products, orders } = useLoaderData<typeof clientLoader>();
+  const actionData = useActionData<typeof clientAction>();
   const submit = useSubmit();
   const { showNotification } = useNotifications();
 

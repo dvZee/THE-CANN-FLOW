@@ -2,26 +2,13 @@ import { useState } from "react";
 import type { Route } from "./+types/checkout";
 import { useCart, useNotifications } from "../context/CartContext";
 import { NavLink } from "react-router";
-import { getOrders, saveOrders } from "../data/db.server";
+import { getOrders, saveOrders } from "../data/db.client";
 
 export function meta({}: Route.MetaArgs) {
   return [
     { title: "Checkout | The Cann Flow" },
     { name: "description", content: "Complete your cannabis order with self-checkout. Same-day delivery in North York and GTA. No credit card required." },
   ];
-}
-
-export async function action({ request }: Route.ActionArgs) {
-  try {
-    const newOrder = await request.json();
-    const orders = getOrders();
-    orders.unshift(newOrder);
-    saveOrders(orders);
-    return { success: true };
-  } catch (e) {
-    console.error("Action error", e);
-    return { success: false, error: "Failed to save order" };
-  }
 }
 
 interface OrderSummary {
@@ -147,25 +134,19 @@ export default function Checkout() {
       timestamp: new Date().toLocaleString()
     };
 
-    // Save to server
+    // Save locally
     try {
-      const response = await fetch("/checkout", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(newOrder)
-      });
-      const result = await response.json();
-      if (result.success) {
-        setPlacedOrder(newOrder);
-        setIsSubmitted(true);
-        clearCart();
-        showNotification("Order self-checked out successfully!", "success");
-      } else {
-        showNotification("Failed to submit order to server", "error");
-      }
+      const orders = getOrders();
+      orders.unshift(newOrder);
+      saveOrders(orders);
+      
+      setPlacedOrder(newOrder);
+      setIsSubmitted(true);
+      clearCart();
+      showNotification("Order self-checked out successfully!", "success");
     } catch (err) {
       console.error("Error submitting order", err);
-      showNotification("Network error submitting order", "error");
+      showNotification("Error saving order details", "error");
     }
   };
 
