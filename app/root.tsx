@@ -73,6 +73,7 @@ function AppContent() {
   const [ageVerified, setAgeVerified] = useState(false);
   const [isStoreOpen, setIsStoreOpen] = useState(false);
   const [nextOpeningTime, setNextOpeningTime] = useState("");
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   // Seed product catalog in localStorage if empty
   useEffect(() => {
@@ -216,16 +217,38 @@ function AppContent() {
               </ul>
 
               <div className="nav-actions">
-                <span className={`badge-status ${isStoreOpen ? "open" : "closed"}`}>
+                <span className={`badge-status ${isStoreOpen ? "open" : "closed"} hide-on-mobile`}>
                   {isStoreOpen ? "OPEN NOW" : `CLOSED - OPENS ${nextOpeningTime}`}
                 </span>
                 <button className="cart-trigger-btn" onClick={() => setIsCartOpen(true)}>
                   <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
                   </svg>
-                  <span>CART</span>
+                  <span className="hide-on-mobile">CART</span>
                   {cartTotalItemsCount > 0 && <span className="cart-count-badge">{cartTotalItemsCount}</span>}
                 </button>
+                <button className="mobile-menu-btn" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
+                  <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                    {isMobileMenuOpen ? (
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                    ) : (
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
+                    )}
+                  </svg>
+                </button>
+              </div>
+
+              {/* Mobile Menu Dropdown */}
+              <div className={`mobile-nav-menu ${isMobileMenuOpen ? "active" : ""}`}>
+                <NavLink to="/" end className="mobile-nav-item" onClick={() => setIsMobileMenuOpen(false)}>MENU</NavLink>
+                <NavLink to="/deals" className="mobile-nav-item" onClick={() => setIsMobileMenuOpen(false)}>OFFERS & LOYALTY</NavLink>
+                <NavLink to="/contact" className="mobile-nav-item" onClick={() => setIsMobileMenuOpen(false)}>HOURS & COVERAGE</NavLink>
+                <NavLink to="/checkout" className="mobile-nav-item" onClick={() => setIsMobileMenuOpen(false)}>CHECKOUT</NavLink>
+                <div className="mobile-status-badge">
+                  <span className={`badge-status ${isStoreOpen ? "open" : "closed"}`}>
+                    {isStoreOpen ? "OPEN NOW" : `CLOSED - OPENS ${nextOpeningTime}`}
+                  </span>
+                </div>
               </div>
             </div>
           </header>

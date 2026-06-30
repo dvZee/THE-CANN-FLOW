@@ -44,7 +44,7 @@ export default function Home() {
       description: "Choose multiple strains and create your perfect package. Get up to 4 different strains at an exclusive discount.",
       link: "/deals",
       buttonText: "BUILD YOUR DEAL",
-      image: "https://images.unsplash.com/photo-1603909223429-69bb7101f420?w=1200&q=80"
+      image: "/slider/mix_match.png"
     },
     {
       id: 1,
@@ -53,7 +53,7 @@ export default function Home() {
       description: "Order during happy hour and save 10% off all products. Instant discount applied automatically at checkout.",
       link: "/deals",
       buttonText: "SEE OFFERS",
-      image: "https://images.unsplash.com/photo-1556911220-e15b29be8c8f?w=1200&q=80"
+      image: "/slider/happy_hour.png"
     },
     {
       id: 2,
@@ -62,7 +62,7 @@ export default function Home() {
       description: "Instant discounts on your order: 5 off every 50 spent. No points, no wait time. Start stacking your savings today.",
       link: "/deals",
       buttonText: "LOYALTY TIERS",
-      image: "https://images.unsplash.com/photo-1608248597279-f99d160bfcbc?w=1200&q=80"
+      image: "/slider/loyalty.png"
     },
     {
       id: 3,
@@ -71,7 +71,7 @@ export default function Home() {
       description: "North York: free delivery above 50. GTA: free delivery above 60. Fast, discreet same-day premium delivery right to your door.",
       link: "/contact",
       buttonText: "COVERAGE MAP",
-      image: "https://images.unsplash.com/photo-1599908608035-7151e3a79d39?w=1200&q=80"
+      image: "/slider/delivery.png"
     }
   ];
 
