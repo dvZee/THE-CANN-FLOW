@@ -74,6 +74,19 @@ function AppContent() {
   const [isStoreOpen, setIsStoreOpen] = useState(false);
   const [nextOpeningTime, setNextOpeningTime] = useState("");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [showBackToTop, setShowBackToTop] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 300) {
+        setShowBackToTop(true);
+      } else {
+        setShowBackToTop(false);
+      }
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   // Seed product catalog in localStorage if empty
   useEffect(() => {
@@ -186,9 +199,9 @@ function AppContent() {
                   <path d="M7 12h10"/>
                   <path d="M12 7v10"/>
                 </svg>
-                <h1 className="age-gate-title">AGE VERIFICATION</h1>
+                <h1 className="age-gate-title">19+ AGE VERIFICATION</h1>
                 <p className="age-gate-text">
-                  This website offers cannabis products and information. You must be 19 years of age or older to enter. We deliver to North York & the GTA same-day.
+                  You must be 19 years of age or older to enter. We deliver to North York & the GTA same-day.
                 </p>
                 <div className="age-gate-buttons">
                   <button className="btn-age-verify" onClick={verifyAge}>I AM 19 OR OLDER</button>
@@ -212,7 +225,15 @@ function AppContent() {
               <ul className="nav-menu">
                 <li><NavLink to="/" end className={({ isActive }) => `nav-item-link ${isActive ? "active" : ""}`}>MENU</NavLink></li>
                 <li><NavLink to="/deals" className={({ isActive }) => `nav-item-link ${isActive ? "active" : ""}`}>OFFERS & LOYALTY</NavLink></li>
-                <li><NavLink to="/contact" className={({ isActive }) => `nav-item-link ${isActive ? "active" : ""}`}>HOURS & COVERAGE</NavLink></li>
+                <li>
+                  <NavLink to="/contact" className={({ isActive }) => `nav-item-link ${isActive ? "active" : ""}`}>
+                    <svg width="15" height="15" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" style={{ marginRight: '6px', verticalAlign: '-1px', display: 'inline-block' }}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                    CONTACT & DELIVERY
+                  </NavLink>
+                </li>
                 <li><NavLink to="/checkout" className={({ isActive }) => `nav-item-link ${isActive ? "active" : ""}`}>CHECKOUT</NavLink></li>
               </ul>
 
@@ -242,7 +263,13 @@ function AppContent() {
               <div className={`mobile-nav-menu ${isMobileMenuOpen ? "active" : ""}`}>
                 <NavLink to="/" end className="mobile-nav-item" onClick={() => setIsMobileMenuOpen(false)}>MENU</NavLink>
                 <NavLink to="/deals" className="mobile-nav-item" onClick={() => setIsMobileMenuOpen(false)}>OFFERS & LOYALTY</NavLink>
-                <NavLink to="/contact" className="mobile-nav-item" onClick={() => setIsMobileMenuOpen(false)}>HOURS & COVERAGE</NavLink>
+                <NavLink to="/contact" className="mobile-nav-item" onClick={() => setIsMobileMenuOpen(false)} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
+                  <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                  </svg>
+                  CONTACT & DELIVERY
+                </NavLink>
                 <NavLink to="/checkout" className="mobile-nav-item" onClick={() => setIsMobileMenuOpen(false)}>CHECKOUT</NavLink>
                 <div className="mobile-status-badge">
                   <span className={`badge-status ${isStoreOpen ? "open" : "closed"}`}>
@@ -265,10 +292,10 @@ function AppContent() {
                   </div>
                   <div className="hh-text">
                     <h3>HAPPY HOUR ACTIVE!</h3>
-                    <p>Get 10% off all items from 3 PM to 5 PM daily. Applied automatically in your cart.</p>
+                    <p>Get 10 off all orders from 3 PM to 5 PM daily. Applied automatically in your cart.</p>
                   </div>
                 </div>
-                <div className="hh-timer">10% OFF ACTIVE</div>
+                <div className="hh-timer">10 OFF ACTIVE</div>
               </div>
             </div>
           )}
@@ -342,7 +369,7 @@ function AppContent() {
                 </div>
                 {happyHourActive && (
                   <div className="summary-row discount">
-                    <span>Happy Hour 10% Off</span>
+                    <span>Happy Hour 10 Off</span>
                     <span>-{cartCalculated.happyHourDiscount.toFixed(2)}</span>
                   </div>
                 )}
@@ -386,12 +413,12 @@ function AppContent() {
           </div>
 
           {/* Footer Section */}
-          <footer style={{ background: "#050807", borderTop: "1px solid var(--border-color)", padding: "4rem 0 2rem", marginTop: "auto" }}>
+          <footer style={{ background: "var(--bg-surface-hover)", borderTop: "1px solid var(--border-color)", padding: "4rem 0 2rem", marginTop: "auto" }}>
             <div className="container-custom" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: "2rem", marginBottom: "3rem" }}>
               <div>
                 <h4 style={{ fontFamily: "var(--font-heading)", color: "var(--text-main)", marginBottom: "1rem", fontSize: "1.2rem", fontWeight: 700 }}>THE CANN FLOW</h4>
                 <p style={{ color: "var(--text-muted)", fontSize: "0.9rem", lineHeight: "1.6" }}>
-                  Same-day premium discreet cannabis delivery services in North York and the Greater Toronto Area (GTA). Unlicensed. Secure self-checkout.
+                  Same-day premium discreet cannabis delivery services in North York and the Greater Toronto Area (GTA).
                 </p>
               </div>
               <div>
@@ -405,19 +432,68 @@ function AppContent() {
               <div>
                 <h4 style={{ fontFamily: "var(--font-heading)", color: "var(--text-main)", marginBottom: "1rem", fontSize: "1.2rem", fontWeight: 700 }}>GET IN TOUCH</h4>
                 <p style={{ color: "var(--text-muted)", fontSize: "0.9rem", lineHeight: "1.6" }}>
-                  Phone & Text: +1 (416) 456-7559<br />
-                  Email: Happytokenpole@gmail.com<br />
+                  Phone & Text: +1 (416) 456-7759<br />
                   Delivery Areas: North York, Toronto, and GTA
                 </p>
               </div>
             </div>
-            <div className="container-custom" style={{ borderTop: "1px solid rgba(255,255,255,0.05)", paddingTop: "1.5rem", display: "flex", justifyContent: "space-between", flexWrap: "wrap", gap: "1rem", fontSize: "0.85rem", color: "var(--text-muted)" }}>
-              <span>&copy; {new Date().getFullYear()} thecannflow.com. All numbers represent values in local currency units without signs.</span>
-              <div style={{ display: "flex", gap: "1rem" }}>
-                <a href="#top" style={{ color: "var(--text-muted)" }}>Back to Top</a>
+            <div className="container-custom" style={{ borderTop: "1px solid var(--border-color)", paddingTop: "1.5rem", display: "flex", justifyContent: "space-between", flexWrap: "wrap", gap: "1rem", fontSize: "0.85rem", color: "var(--text-muted)" }}>
+              <span>&copy; {new Date().getFullYear()} thecannflow.com</span>
+              <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
+                <a 
+                  href="#top" 
+                  aria-label="Back to Top"
+                  style={{ 
+                    color: "var(--text-muted)", 
+                    display: "inline-flex", 
+                    alignItems: "center", 
+                    justifyContent: "center", 
+                    background: "var(--bg-input)", 
+                    border: "1px solid var(--border-color)", 
+                    width: "36px", 
+                    height: "36px", 
+                    borderRadius: "50%", 
+                    transition: "var(--transition-fast)" 
+                  }}
+                  className="back-to-top-btn"
+                >
+                  <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 15l7-7 7 7"/>
+                  </svg>
+                </a>
               </div>
             </div>
           </footer>
+
+          {showBackToTop && (
+            <a 
+              href="#top" 
+              aria-label="Back to Top"
+              style={{ 
+                position: "fixed",
+                bottom: "2rem",
+                right: "2rem",
+                zIndex: 99,
+                color: "var(--text-main)", 
+                display: "inline-flex", 
+                alignItems: "center", 
+                justifyContent: "center", 
+                background: "var(--bg-surface)", 
+                border: "1px solid var(--border-color)", 
+                width: "44px", 
+                height: "44px", 
+                borderRadius: "50%", 
+                boxShadow: "var(--shadow-lg)",
+                transition: "all 0.3s ease",
+                cursor: "pointer"
+              }}
+              className="back-to-top-sticky"
+            >
+              <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M5 15l7-7 7 7"/>
+              </svg>
+            </a>
+          )}
         </div>
       );
 }

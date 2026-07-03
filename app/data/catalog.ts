@@ -3,7 +3,7 @@ export interface Product {
   name: string;
   brand: string;
   description: string;
-  category: string; // 'Hybrid' | 'Indica' | 'Sativa' | 'Pre-rolls' | 'Vapes' | 'Topicals'
+  category: string; // 'Hybrid' | 'Indica' | 'Sativa' | 'Pre-rolls' | 'Vapes' | 'Topicals' | 'Edibles'
   price: number;
   originalPrice?: number;
   thc: string;
@@ -156,5 +156,36 @@ export const INITIAL_PRODUCTS: Product[] = [
     isFeatured: false,
     weight: "1.8oz",
     weights: ["1.8oz"]
+  },
+  {
+    id: "edible-gummies-1",
+    name: "Peach THC Jelly Bites",
+    brand: "Wana",
+    description: "Delicious peach-flavored organic jelly bites infused with premium THC distillate. Sweet, juicy, and precise dosing for an uplifting edible experience.",
+    category: "Edibles",
+    price: 15.00,
+    originalPrice: 20.00,
+    thc: "10mg THC per pack",
+    rating: 4.8,
+    reviewsCount: 88,
+    image: "https://images.unsplash.com/photo-1581798459219-318e76aecc7b?w=400&q=80",
+    isFeatured: true,
+    weight: "5 x 2mg",
+    weights: ["5 x 2mg"]
+  },
+  {
+    id: "edible-chocolate-1",
+    name: "Classic Milk Chocolate Bar",
+    brand: "Bhang",
+    description: "Artisanal milk chocolate bar divided into 4 pieces. Rich, creamy chocolate infused with lab-tested hybrid THC extract for a smooth body flow.",
+    category: "Edibles",
+    price: 12.00,
+    thc: "10mg THC total",
+    rating: 4.7,
+    reviewsCount: 54,
+    image: "https://images.unsplash.com/photo-1606313564200-e75d5e30476c?w=400&q=80",
+    isFeatured: false,
+    weight: "40g",
+    weights: ["40g"]
   }
 ];

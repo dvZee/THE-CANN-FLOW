@@ -192,7 +192,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       return acc + (itemPrice * item.quantity);
     }, 0);
 
-    const happyHourDiscount = happyHourActive ? subtotal * 0.10 : 0;
+    const happyHourDiscount = happyHourActive ? Math.min(10, subtotal) : 0;
     const runningSubtotal = subtotal - happyHourDiscount;
     const loyaltyDiscount = Math.floor(runningSubtotal / 50) * 5;
     const referralDiscount = referralApplied ? Math.min(20, runningSubtotal - loyaltyDiscount) : 0;

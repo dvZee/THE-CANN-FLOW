@@ -615,6 +615,7 @@ export default function Admin() {
                     <option value="Pre-rolls">Pre-rolls</option>
                     <option value="Vapes">Vapes</option>
                     <option value="Topicals">Topicals</option>
+                    <option value="Edibles">Edibles</option>
                   </select>
                 </div>
               </div>

@@ -7,7 +7,7 @@ import { getOrders, saveOrders } from "../data/db.client";
 export function meta({}: Route.MetaArgs) {
   return [
     { title: "Checkout | The Cann Flow" },
-    { name: "description", content: "Complete your cannabis order with self-checkout. Same-day delivery in North York and GTA. No credit card required." },
+    { name: "description", content: "Complete your delivery information. Same-day delivery in North York and GTA." },
   ];
 }
 
@@ -140,6 +140,55 @@ export default function Checkout() {
       orders.unshift(newOrder);
       saveOrders(orders);
       
+      const orderSummaryText = getSmsText(newOrder);
+
+      // 1. Submit to Netlify Forms (Asynchronously)
+      try {
+        await fetch("/", {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: new URLSearchParams({
+            "form-name": "checkout-order",
+            name: name,
+            phone: phone,
+            address: address || "Mail Order",
+            zone: delivery.name,
+            paymentMethod: paymentMethod,
+            orderDetails: orderSummaryText,
+            total: finalTotal.toFixed(2),
+          }).toString(),
+        });
+      } catch (err) {
+        console.warn("Netlify form submission failed", err);
+      }
+
+      // 2. Submit to Web3Forms (Asynchronously) if access key is configured
+      const web3FormsKey = import.meta.env.VITE_WEB3FORMS_KEY || "";
+      if (web3FormsKey) {
+        try {
+          await fetch("https://api.web3forms.com/submit", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Accept: "application/json",
+            },
+            body: JSON.stringify({
+              access_key: web3FormsKey,
+              subject: `New Delivery Order: ${newOrder.orderId} - ${newOrder.name}`,
+              from_name: "The Cann Flow",
+              name: newOrder.name,
+              phone: newOrder.phone,
+              address: newOrder.address,
+              zone: newOrder.zone,
+              total: newOrder.total,
+              message: orderSummaryText,
+            }),
+          });
+        } catch (err) {
+          console.warn("Web3Forms email submission failed", err);
+        }
+      }
+
       setPlacedOrder(newOrder);
       setIsSubmitted(true);
       clearCart();
@@ -203,11 +252,11 @@ Please confirm my delivery, thank you!`;
           <div style={{ textAlign: "left", background: "var(--bg-input)", border: "1px solid var(--border-color)", padding: "1.5rem", borderRadius: "10px", marginBottom: "2rem" }}>
             <h3 style={{ fontSize: "1.1rem", fontWeight: 700, marginBottom: "0.5rem", color: "var(--color-primary)" }}>TEXT US TO CONFIRM</h3>
             <p style={{ fontSize: "0.85rem", color: "var(--text-muted)", lineHeight: 1.6, marginBottom: "1rem" }}>
-              Since we are a cash/EMT self-checkout shop, please text your order summary to <strong>+1 (416) 456-7559</strong>. Click below to auto-open your text messages, or copy the template to text manually.
+              Since we are a cash/EMT self-checkout shop, please text your order summary to <strong>+1 (416) 456-7759</strong>. Click below to auto-open your text messages, or copy the template to text manually.
             </p>
             <div style={{ display: "flex", gap: "1rem" }}>
               <a 
-                href={`sms:+14164567559?body=${encodedSms}`} 
+                href={`sms:+14164567759?body=${encodedSms}`} 
                 style={{ flex: 1, textAlign: "center" }}
               >
                 <button className="btn-age-verify" style={{ width: "100%" }}>OPEN MESSAGES</button>
@@ -273,8 +322,19 @@ Please confirm my delivery, thank you!`;
       ) : (
         <div className="checkout-grid">
           
-          {/* Checkout Details Form */}
-          <form className="glass-panel" style={{ padding: "2rem" }} onSubmit={handleCheckoutSubmit}>
+          <form 
+            className="glass-panel" 
+            style={{ padding: "2rem" }} 
+            onSubmit={handleCheckoutSubmit}
+            name="checkout-order"
+            data-netlify="true"
+          >
+            <input type="hidden" name="form-name" value="checkout-order" />
+            <input type="hidden" name="zone" value={zone} />
+            <input type="hidden" name="paymentMethod" value={paymentMethod} />
+            <input type="hidden" name="total" value={finalTotal.toFixed(2)} />
+            <input type="hidden" name="orderDetails" value={cart.map(item => `${item.product.name} (${item.selectedWeight}) x${item.quantity}`).join(", ")} />
+            
             <h2 style={{ fontSize: "1.35rem", fontWeight: 700, borderBottom: "1px solid var(--border-color)", paddingBottom: "1rem", marginBottom: "1.5rem" }}>DELIVERY INFORMATION</h2>
             
             <div className="form-group">
@@ -294,7 +354,7 @@ Please confirm my delivery, thank you!`;
               <input
                 type="tel"
                 className="form-input"
-                placeholder="e.g. +1 (416) 456-7559"
+                placeholder="e.g. +1 (416) 456-7759"
                 required
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
@@ -309,14 +369,14 @@ Please confirm my delivery, thank you!`;
                   onClick={() => setZone("north-york")}
                 >
                   <div className="zone-card-title">North York</div>
-                  <div className="zone-card-info">Free on 50+<br />Else 5.00 fee</div>
+                  <div className="zone-card-info">Free on 50+<br />Else 5–10 fee</div>
                 </div>
                 <div 
                   className={`zone-card ${zone === "gta" ? "selected" : ""}`}
                   onClick={() => setZone("gta")}
                 >
                   <div className="zone-card-title">GTA</div>
-                  <div className="zone-card-info">Free on 60+<br />Else 10.00 fee</div>
+                  <div className="zone-card-info">Free on 60+<br />Else 5-20 fee</div>
                 </div>
                 <div 
                   className={`zone-card ${zone === "mail" ? "selected" : ""}`}
@@ -426,7 +486,7 @@ Please confirm my delivery, thank you!`;
                 </div>
                 {happyHourActive && (
                   <div style={{ display: "flex", justifyContent: "space-between" }} className="discount">
-                    <span>Happy Hour 10% Off</span>
+                    <span>Happy Hour 10 Off</span>
                     <span>-{cartCalcs.happyHourDiscount.toFixed(2)}</span>
                   </div>
                 )}

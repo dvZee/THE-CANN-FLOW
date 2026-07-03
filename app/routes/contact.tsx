@@ -4,8 +4,8 @@ import { useNotifications } from "../context/CartContext";
 
 export function meta({}: Route.MetaArgs) {
   return [
-    { title: "Hours & Coverage | The Cann Flow" },
-    { name: "description", content: "Check business hours and delivery coverage. We deliver same-day to North York and the Greater Toronto Area (GTA). Phone: +1 (416) 456-7559." },
+    { title: "Contact & Delivery | The Cann Flow" },
+    { name: "description", content: "Contact details and delivery info. Call & Text: +1 (416) 456-7759. Same-day delivery in North York & GTA." },
   ];
 }
 
@@ -16,6 +16,7 @@ export default function Contact() {
   const [openingStatusText, setOpeningStatusText] = useState("");
   const [contactName, setContactName] = useState("");
   const [contactEmail, setContactEmail] = useState("");
+  const [contactPhone, setContactPhone] = useState("");
   const [contactMessage, setContactMessage] = useState("");
 
   // Check current time status in Toronto
@@ -110,6 +111,7 @@ export default function Contact() {
     showNotification("Message sent successfully! We will get in touch shortly.");
     setContactName("");
     setContactEmail("");
+    setContactPhone("");
     setContactMessage("");
   };
 
@@ -118,8 +120,8 @@ export default function Contact() {
       
       {/* Page Title */}
       <div style={{ textAlign: "center", marginBottom: "3rem" }}>
-        <h1 style={{ fontSize: "2.5rem", fontFamily: "var(--font-heading)", fontWeight: 800, marginBottom: "0.5rem" }}>CONTACT & COVERAGE</h1>
-        <p style={{ color: "var(--text-muted)", fontSize: "1.05rem" }}>Get in touch, view delivery radius guidelines, or check our operating schedules.</p>
+        <h1 style={{ fontSize: "2.5rem", fontFamily: "var(--font-heading)", fontWeight: 800, marginBottom: "0.5rem" }}>CONTACT & DELIVERY</h1>
+        <p style={{ color: "var(--text-muted)", fontSize: "1.05rem" }}>Call & text, order online directly, or check our delivery coverage zones.</p>
       </div>
 
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: "2.5rem", alignItems: "start" }}>
@@ -171,20 +173,20 @@ export default function Contact() {
                   </svg>
                 </div>
                 <div>
-                  <span style={{ fontSize: "0.75rem", color: "var(--text-muted)", display: "block" }}>PHONE & TEXT</span>
-                  <a href="tel:+14164567559" style={{ fontWeight: 600, color: "var(--text-main)" }}>+1 (416) 456-7559</a>
+                  <span style={{ fontSize: "0.75rem", color: "var(--text-muted)", display: "block" }}>CALL & TEXT</span>
+                  <a href="tel:+14164567759" style={{ fontWeight: 600, color: "var(--text-main)" }}>+1 (416) 456-7759</a>
                 </div>
               </div>
 
               <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
                 <div style={{ background: "rgba(16,185,129,0.1)", color: "var(--color-primary)", padding: "0.6rem", borderRadius: "8px" }}>
                   <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
                   </svg>
                 </div>
                 <div>
-                  <span style={{ fontSize: "0.75rem", color: "var(--text-muted)", display: "block" }}>EMAIL INQUIRIES</span>
-                  <a href="mailto:Happytokenpole@gmail.com" style={{ fontWeight: 600, color: "var(--text-main)" }}>Happytokenpole@gmail.com</a>
+                  <span style={{ fontSize: "0.75rem", color: "var(--text-muted)", display: "block" }}>ORDER ONLINE</span>
+                  <span style={{ fontWeight: 600, color: "var(--text-main)" }}>Available directly on site</span>
                 </div>
               </div>
 
@@ -196,8 +198,8 @@ export default function Contact() {
                   </svg>
                 </div>
                 <div>
-                  <span style={{ fontSize: "0.75rem", color: "var(--text-muted)", display: "block" }}>DELIVERY COVERAGE</span>
-                  <span style={{ fontWeight: 600, color: "var(--text-main)" }}>North York & Greater Toronto Area (GTA)</span>
+                  <span style={{ fontSize: "0.75rem", color: "var(--text-muted)", display: "block" }}>LOCATION</span>
+                  <span style={{ fontWeight: 600, color: "var(--text-main)" }}>North York & GTA</span>
                 </div>
               </div>
             </div>
@@ -210,31 +212,29 @@ export default function Contact() {
           
           {/* Delivery Zones */}
           <section className="glass-panel" style={{ padding: "2rem" }}>
-            <h2 style={{ fontSize: "1.35rem", fontWeight: 700, color: "var(--text-main)", marginBottom: "1rem" }}>DELIVERY SCHEDULING</h2>
+            <h2 style={{ fontSize: "1.35rem", fontWeight: 700, color: "var(--text-main)", marginBottom: "1rem" }}>DELIVERY COVERAGE</h2>
             <p style={{ color: "var(--text-muted)", fontSize: "0.9rem", lineHeight: "1.6", marginBottom: "1.5rem" }}>
-              Discreet and premium delivery service to your door. Operating with same-day deliveries across our zones.
+              We offer discreet, premium delivery to North York & GTA.
             </p>
 
-            <div style={{ display: "grid", gap: "1rem" }}>
+            <div style={{ display: "grid", gap: "1.25rem" }}>
               <div style={{ borderLeft: "3px solid var(--color-primary)", paddingLeft: "1rem" }}>
-                <h4 style={{ fontWeight: 700, color: "var(--text-main)", fontSize: "0.95rem" }}>North York Area</h4>
-                <p style={{ color: "var(--text-muted)", fontSize: "0.85rem" }}>
-                  Minimum order: 50.00 for free delivery.<br />
-                  Orders below minimum: 5.00 delivery fee.
+                <h4 style={{ fontWeight: 700, color: "var(--text-main)", fontSize: "0.95rem" }}>North York</h4>
+                <p style={{ color: "var(--text-muted)", fontSize: "0.85rem", marginTop: "0.25rem" }}>
+                  Minimum order 50 for free delivery. Under minimum: 5–10 delivery fee.
                 </p>
               </div>
 
               <div style={{ borderLeft: "3px solid var(--color-primary)", paddingLeft: "1rem" }}>
-                <h4 style={{ fontWeight: 700, color: "var(--text-main)", fontSize: "0.95rem" }}>GTA Area (Greater Toronto)</h4>
-                <p style={{ color: "var(--text-muted)", fontSize: "0.85rem" }}>
-                  Minimum order: 60.00 for free delivery.<br />
-                  Orders below minimum: 10.00 delivery fee.
+                <h4 style={{ fontWeight: 700, color: "var(--text-main)", fontSize: "0.95rem" }}>GTA</h4>
+                <p style={{ color: "var(--text-muted)", fontSize: "0.85rem", marginTop: "0.25rem" }}>
+                  Minimum order 60 for free delivery. Under minimum: 5–20 delivery fee.
                 </p>
               </div>
 
               <div style={{ borderLeft: "3px solid var(--color-secondary)", paddingLeft: "1rem" }}>
                 <h4 style={{ fontWeight: 700, color: "var(--text-main)", fontSize: "0.95rem" }}>Canada Post Mail Orders</h4>
-                <p style={{ color: "var(--text-muted)", fontSize: "0.85rem" }}>
+                <p style={{ color: "var(--text-muted)", fontSize: "0.85rem", marginTop: "0.25rem" }}>
                   Canada-wide shipping. Flat mailing fee: 15.00.
                 </p>
               </div>
@@ -243,11 +243,14 @@ export default function Contact() {
 
           {/* Feedback Contact Form */}
           <section className="glass-panel" style={{ padding: "2rem" }}>
-            <h2 style={{ fontSize: "1.35rem", fontWeight: 700, color: "var(--text-main)", marginBottom: "1.25rem" }}>LEAVE A MESSAGE</h2>
+            <h2 style={{ fontSize: "1.35rem", fontWeight: 700, color: "var(--text-main)", marginBottom: "0.5rem" }}>Send Us a Message</h2>
+            <p style={{ color: "var(--text-muted)", fontSize: "0.9rem", marginBottom: "1.5rem" }}>
+              Questions about an order or product? We respond promptly.
+            </p>
             
             <form onSubmit={handleContactSubmit} style={{ display: "grid", gap: "1rem" }}>
               <div className="form-group" style={{ marginBottom: 0 }}>
-                <label className="form-label">Your Name</label>
+                <label className="form-label" style={{ fontSize: "0.75rem", letterSpacing: "0.05em" }}>NAME *</label>
                 <input
                   type="text"
                   required
@@ -259,7 +262,7 @@ export default function Contact() {
               </div>
 
               <div className="form-group" style={{ marginBottom: 0 }}>
-                <label className="form-label">Email Address</label>
+                <label className="form-label" style={{ fontSize: "0.75rem", letterSpacing: "0.05em" }}>EMAIL *</label>
                 <input
                   type="email"
                   required
@@ -271,7 +274,18 @@ export default function Contact() {
               </div>
 
               <div className="form-group" style={{ marginBottom: 0 }}>
-                <label className="form-label">Message</label>
+                <label className="form-label" style={{ fontSize: "0.75rem", letterSpacing: "0.05em" }}>PHONE</label>
+                <input
+                  type="tel"
+                  placeholder="e.g. +1 (416) 456-7759"
+                  className="form-input"
+                  value={contactPhone}
+                  onChange={(e) => setContactPhone(e.target.value)}
+                />
+              </div>
+
+              <div className="form-group" style={{ marginBottom: 0 }}>
+                <label className="form-label" style={{ fontSize: "0.75rem", letterSpacing: "0.05em" }}>MESSAGE *</label>
                 <textarea
                   required
                   placeholder="Enter details of your inquiry..."
@@ -282,7 +296,7 @@ export default function Contact() {
                 />
               </div>
 
-              <button type="submit" className="cart-checkout-btn" style={{ padding: "0.8rem" }}>
+              <button type="submit" className="cart-checkout-btn" style={{ padding: "0.8rem", textTransform: "uppercase" }}>
                 SEND MESSAGE
               </button>
             </form>

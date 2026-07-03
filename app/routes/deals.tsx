@@ -311,14 +311,14 @@ export default function Deals() {
               <span className="slide-tag" style={{ border: "1px solid var(--color-accent-gold)", color: "var(--color-accent-gold)" }}>Save daily</span>
               <h2 style={{ fontSize: "1.5rem", color: "var(--text-main)", fontWeight: 700, marginTop: "0.5rem", marginBottom: "0.75rem" }}>HAPPY HOUR</h2>
               <p style={{ color: "var(--text-muted)", fontSize: "0.9rem", lineHeight: "1.6", marginBottom: "1.5rem" }}>
-                Order during happy hour and save 10% on all products!
+                Order during happy hour and save 10 on your order!
                 Active daily from 15:00 to 17:00 (3 PM - 5 PM) Eastern Standard Time.
               </p>
               
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", background: "var(--bg-input)", border: "1px solid var(--border-color)", padding: "1rem", borderRadius: "8px" }}>
                 <span style={{ fontSize: "0.9rem", fontWeight: 600 }}>Current Status:</span>
                 <span className={`badge-status ${happyHourActive ? "open" : "closed"}`} style={{ borderColor: happyHourActive ? "var(--color-primary)" : "var(--color-danger)" }}>
-                  {happyHourActive ? "ACTIVE (10% OFF)" : "INACTIVE"}
+                  {happyHourActive ? "ACTIVE (10 OFF)" : "INACTIVE"}
                 </span>
               </div>
             </section>

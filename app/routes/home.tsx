@@ -9,8 +9,8 @@ import { getProducts } from "../data/db.client";
 
 export function meta({}: Route.MetaArgs) {
   return [
-    { title: "Menu | The Cann Flow - Cannabis Delivery North York & GTA" },
-    { name: "description", content: "Order cannabis online with same-day discreet delivery in North York & GTA. Flowers, pre-rolls, vapes, and topicals. No dollar sign pricing." },
+    { title: "Menu | The Cann Flow - Delivery North York & GTA" },
+    { name: "description", content: "Discreet same-day delivery in North York & GTA. Flowers, pre-rolls, vapes, and topicals." },
   ];
 }
 
@@ -40,17 +40,17 @@ export default function Home() {
     {
       id: 0,
       tag: "Mix & Match Deal",
-      title: "Customize Your Flow",
-      description: "Choose multiple strains and create your perfect package. Get up to 4 different strains at an exclusive discount.",
+      title: "Mix & Match Flower Deals",
+      description: "Choose multiple strains and customize your order. More choice. More control.",
       link: "/deals",
-      buttonText: "BUILD YOUR DEAL",
+      buttonText: "Explore",
       image: "/slider/mix_match.png"
     },
     {
       id: 1,
       tag: "Happy Hour",
       title: "Daily 15:00 - 17:00",
-      description: "Order during happy hour and save 10% off all products. Instant discount applied automatically at checkout.",
+      description: "Order during happy hour and save 10 off your order. Instant discount applied automatically at checkout.",
       link: "/deals",
       buttonText: "SEE OFFERS",
       image: "/slider/happy_hour.png"
@@ -59,18 +59,18 @@ export default function Home() {
       id: 2,
       tag: "Loyalty Program",
       title: "Spend More, Save More",
-      description: "Instant discounts on your order: 5 off every 50 spent. No points, no wait time. Start stacking your savings today.",
+      description: "Instant discounts on your order: 5 off every 50 spent. Start stacking your savings today.",
       link: "/deals",
       buttonText: "LOYALTY TIERS",
       image: "/slider/loyalty.png"
     },
     {
       id: 3,
-      tag: "Same-Day Delivery",
-      title: "North York & GTA Delivery",
-      description: "North York: free delivery above 50. GTA: free delivery above 60. Fast, discreet same-day premium delivery right to your door.",
+      tag: "FAST & DISCREET",
+      title: "Premium Delivery to Your Door",
+      description: "Serving North York and GTA. Free delivery on qualifying orders.",
       link: "/contact",
-      buttonText: "COVERAGE MAP",
+      buttonText: "CHECK DELIVERY AREA",
       image: "/slider/delivery.png"
     }
   ];
@@ -92,9 +92,113 @@ export default function Home() {
   });
 
   const featuredProducts = filteredProducts.filter((p) => p.isFeatured);
+  const saleProducts = filteredProducts.filter((p) => p.originalPrice && p.originalPrice > p.price);
 
   // Group by categories
-  const categories = ["Hybrid", "Indica", "Sativa", "Pre-rolls", "Vapes", "Topicals"];
+  const categories = ["Hybrid", "Indica", "Sativa", "Pre-rolls", "Vapes", "Topicals", "Edibles"];
+
+  const quickCategories = [
+    { 
+      id: "featured", 
+      name: "Featured",
+      icon: (
+        <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M11.48 3.499c.198-.39.76-.39.958 0l2.259 4.45 4.903.704c.44.063.618.604.3.92l-3.555 3.47 1.021 4.883c.092.438-.39.788-.776.57l-4.39-2.284-4.39 2.284c-.387.218-.868-.132-.776-.57l1.021-4.883-3.556-3.47c-.318-.316-.14-.857.3-.92l4.897-.704 2.26-4.45z" />
+        </svg>
+      )
+    },
+    { 
+      id: "sale", 
+      name: "Sale",
+      icon: (
+        <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M9.504 11.624L7.5 9.617m0 0l-2.004 2.007M7.5 9.617V17.5m5.339-12.793A1.992 1.992 0 0011.661 4H8.339a1.992 1.992 0 00-1.178.707L2.457 9.877c-.608.61-.608 1.6 0 2.21l5.339 5.34c.607.608 1.599.608 2.207 0l5.339-5.34a1.992 1.992 0 00.707-1.178V7.545a1.992 1.992 0 00-.707-1.178l-2.998-3.16z" />
+        </svg>
+      )
+    },
+    { 
+      id: "hybrid", 
+      name: "Hybrid",
+      icon: (
+        <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v18M12 3c-1.5 1.5-4 4-4 8s2.5 7 4 10M12 3c1.5 1.5 4 4 4 8s-2.5 7-4 10M6 12c1.5-1 3.5-1 5-1M18 12c-1.5-1-3.5-1-5-1" />
+        </svg>
+      )
+    },
+    { 
+      id: "indica", 
+      name: "Indica",
+      icon: (
+        <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v18M12 5c-3 1-5 4-5 8s2 6 5 8M12 5c3 1 5 4 5 8s-2 6-5 8M4 14c2-1 5-1 8-1M20 14c-2-1-5-1-8-1" />
+        </svg>
+      )
+    },
+    { 
+      id: "sativa", 
+      name: "Sativa",
+      icon: (
+        <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v18M12 4c-1.5 2-2.5 5-2.5 9s1 6 2.5 8M12 4c1.5 2 2.5 5 2.5 9s-1 6-2.5 8M8 12c1 0 2.5-.5 4-.5M16 12c-1 0-2.5-.5-4-.5" />
+        </svg>
+      )
+    },
+    { 
+      id: "pre-rolls", 
+      name: "Pre-rolls",
+      icon: (
+        <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M4 18L18 4m-2 14l4-4M5 13l6 6M3 21l3-3" />
+        </svg>
+      )
+    },
+    { 
+      id: "vapes", 
+      name: "Vapes",
+      icon: (
+        <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M9 22h6M12 2v4M10 6h4v12a2 2 0 01-2 2h0a2 2 0 01-2-2V6z" />
+        </svg>
+      )
+    },
+    { 
+      id: "topicals", 
+      name: "Topicals",
+      icon: (
+        <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M7 12h10M7 8h10M6 8a2 2 0 012-2h8a2 2 0 012 2v10a2 2 0 01-2 2H8a2 2 0 01-2-2V8z" />
+        </svg>
+      )
+    },
+    { 
+      id: "edibles", 
+      name: "Edibles",
+      icon: (
+        <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M12 21a9 9 0 100-18 9 9 0 000 18zM9 10h.01M15 10h.01M9 15a3.5 3.5 0 006 0" />
+        </svg>
+      )
+    }
+  ];
+
+  const scrollToSection = (id: string) => {
+    const element = document.getElementById(id);
+    if (element) {
+      const headerOffset = 100;
+      const elementPosition = element.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.scrollY - headerOffset;
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: "smooth"
+      });
+    }
+  };
+
+  const checkCategoryHasProducts = (id: string) => {
+    if (id === "featured") return featuredProducts.length > 0;
+    if (id === "sale") return saleProducts.length > 0;
+    return filteredProducts.some(p => p.category.toLowerCase() === id.toLowerCase());
+  };
 
   return (
     <div className="container-custom" style={{ marginTop: "1rem" }}>
@@ -135,6 +239,27 @@ export default function Home() {
         </svg>
       </div>
 
+      {/* Quick Category Selector */}
+      <div className="quick-category-bar">
+        {quickCategories.map((cat) => {
+          const hasProducts = checkCategoryHasProducts(cat.id);
+          if (!hasProducts) return null;
+
+          return (
+            <button
+              key={cat.id}
+              className="quick-category-card"
+              onClick={() => scrollToSection(cat.id)}
+            >
+              <div className="quick-category-card-icon">
+                {cat.icon}
+              </div>
+              <span className="quick-category-card-name">{cat.name}</span>
+            </button>
+          );
+        })}
+      </div>
+
       {/* Promo Banner Carousel / Slider */}
       {searchQuery === "" && (
         <div className="hero-slider-container">
@@ -147,9 +272,70 @@ export default function Home() {
               <div className="slide-content">
                 <span className="slide-tag">{slide.tag}</span>
                 <h1 className="slide-title">{slide.title}</h1>
-                <p className="slide-desc">{slide.description}</p>
+                <p className="slide-desc" style={{ marginBottom: slide.id === 3 ? "1rem" : "2rem" }}>{slide.description}</p>
+                
+                {slide.id === 3 && (
+                  <div className="slide-features-grid">
+                    <div className="slide-feature-item">
+                      <div className="slide-feature-icon">
+                        <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 011-1v-4h3l3.293 3.293a1 1 0 01.171.344l.536 2.144a1 1 0 01-.97 1.242H13" />
+                        </svg>
+                      </div>
+                      <div>
+                        <div className="slide-feature-title">Fast Delivery</div>
+                        <div className="slide-feature-subtitle">Same day service</div>
+                      </div>
+                    </div>
+                    
+                    <div className="slide-feature-item">
+                      <div className="slide-feature-icon">
+                        <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                      </div>
+                      <div>
+                        <div className="slide-feature-title">Free Delivery</div>
+                        <div className="slide-feature-subtitle">On qualifying orders</div>
+                      </div>
+                    </div>
+
+                    <div className="slide-feature-item">
+                      <div className="slide-feature-icon">
+                        <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                        </svg>
+                      </div>
+                      <div>
+                        <div className="slide-feature-title">Discreet</div>
+                        <div className="slide-feature-subtitle">Plain packaging</div>
+                      </div>
+                    </div>
+
+                    <div className="slide-feature-item">
+                      <div className="slide-feature-icon">
+                        <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                        </svg>
+                      </div>
+                      <div>
+                        <div className="slide-feature-title">19+ Verified</div>
+                        <div className="slide-feature-subtitle">Age verification</div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
                 <NavLink to={slide.link}>
-                  <button className="slide-btn">{slide.buttonText}</button>
+                  <button className="slide-btn" style={{ marginTop: slide.id === 3 ? "1.25rem" : "0" }}>
+                    {slide.id === 3 && (
+                      <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" style={{ marginRight: "8px", verticalAlign: "middle", display: "inline-block" }}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 011-1v-4h3l3.293 3.293a1 1 0 01.171.344l.536 2.144a1 1 0 01-.97 1.242H13" />
+                      </svg>
+                    )}
+                    {slide.buttonText}
+                  </button>
                 </NavLink>
               </div>
             </div>
@@ -168,11 +354,24 @@ export default function Home() {
 
       {/* Featured Products Section */}
       {featuredProducts.length > 0 && (
-        <CategoryScroll title="Featured Products">
-          {featuredProducts.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
-        </CategoryScroll>
+        <div id="featured">
+          <CategoryScroll title="Featured Products">
+            {featuredProducts.map((product) => (
+              <ProductCard key={product.id} product={product} />
+            ))}
+          </CategoryScroll>
+        </div>
+      )}
+
+      {/* Sale Section */}
+      {saleProducts.length > 0 && (
+        <div id="sale">
+          <CategoryScroll title="Sale">
+            {saleProducts.map((product) => (
+              <ProductCard key={product.id} product={product} />
+            ))}
+          </CategoryScroll>
+        </div>
       )}
 
       {/* Product categories lists (horizontal scrolls) */}
@@ -184,11 +383,13 @@ export default function Home() {
         if (categoryProducts.length === 0) return null;
 
         return (
-          <CategoryScroll key={category} title={category}>
-            {categoryProducts.map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
-          </CategoryScroll>
+          <div key={category} id={category.toLowerCase()}>
+            <CategoryScroll title={category}>
+              {categoryProducts.map((product) => (
+                <ProductCard key={product.id} product={product} />
+              ))}
+            </CategoryScroll>
+          </div>
         );
       })}
 
