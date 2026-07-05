@@ -252,7 +252,7 @@ Please confirm my delivery, thank you!`;
           <div style={{ textAlign: "left", background: "var(--bg-input)", border: "1px solid var(--border-color)", padding: "1.5rem", borderRadius: "10px", marginBottom: "2rem" }}>
             <h3 style={{ fontSize: "1.1rem", fontWeight: 700, marginBottom: "0.5rem", color: "var(--color-primary)" }}>TEXT US TO CONFIRM</h3>
             <p style={{ fontSize: "0.85rem", color: "var(--text-muted)", lineHeight: 1.6, marginBottom: "1rem" }}>
-              Since we are a cash/EMT self-checkout shop, please text your order summary to <strong>+1 (416) 456-7759</strong>. Click below to auto-open your text messages, or copy the template to text manually.
+              Since we are a cash/EMT self-checkout shop, please text your order summary to <strong>416 456 7759</strong>. Click below to auto-open your text messages, or copy the template to text manually.
             </p>
             <div style={{ display: "flex", gap: "1rem" }}>
               <a 
@@ -354,7 +354,7 @@ Please confirm my delivery, thank you!`;
               <input
                 type="tel"
                 className="form-input"
-                placeholder="e.g. +1 (416) 456-7759"
+                placeholder="e.g. 416 456 7759"
                 required
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}

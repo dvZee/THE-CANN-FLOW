@@ -95,7 +95,7 @@ export default function Home() {
   const saleProducts = filteredProducts.filter((p) => p.originalPrice && p.originalPrice > p.price);
 
   // Group by categories
-  const categories = ["Hybrid", "Indica", "Sativa", "Pre-rolls", "Vapes", "Topicals", "Edibles"];
+  const categories = ["Hybrid", "Indica", "Sativa", "Pre-rolls", "Vapes", "Topicals", "Edibles", "Concentrates"];
 
   const quickCategories = [
     { 
@@ -176,6 +176,16 @@ export default function Home() {
       icon: (
         <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" d="M12 21a9 9 0 100-18 9 9 0 000 18zM9 10h.01M15 10h.01M9 15a3.5 3.5 0 006 0" />
+        </svg>
+      )
+    },
+    { 
+      id: "concentrates", 
+      name: "Concentrates",
+      icon: (
+        <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 4.142-3.358 7.5-7.5 7.5s-7.5-3.358-7.5-7.5c0-3.464 3.062-6.422 7.5-10.5 4.438 4.078 7.5 7.036 7.5 10.5z" />
+          <path strokeLinecap="round" strokeLinejoin="round" d="M12 9a2 2 0 00-2 2" />
         </svg>
       )
     }
@@ -272,8 +282,60 @@ export default function Home() {
               <div className="slide-content">
                 <span className="slide-tag">{slide.tag}</span>
                 <h1 className="slide-title">{slide.title}</h1>
-                <p className="slide-desc" style={{ marginBottom: slide.id === 3 ? "1rem" : "2rem" }}>{slide.description}</p>
+                <p className="slide-desc" style={{ marginBottom: (slide.id === 3 || slide.id === 0) ? "1rem" : "2rem" }}>{slide.description}</p>
                 
+                {slide.id === 0 && (
+                  <div className="slide-features-grid">
+                    <div className="slide-feature-item">
+                      <div className="slide-feature-icon">
+                        <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                        </svg>
+                      </div>
+                      <div>
+                        <div className="slide-feature-title">Half-Ounce Bundle</div>
+                        <div className="slide-feature-subtitle">14g for 60.00</div>
+                      </div>
+                    </div>
+                    
+                    <div className="slide-feature-item">
+                      <div className="slide-feature-icon">
+                        <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                        </svg>
+                      </div>
+                      <div>
+                        <div className="slide-feature-title">Ounce Bundle</div>
+                        <div className="slide-feature-subtitle">28g for 110.00</div>
+                      </div>
+                    </div>
+
+                    <div className="slide-feature-item">
+                      <div className="slide-feature-icon">
+                        <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 1121.21 8H18.25" />
+                        </svg>
+                      </div>
+                      <div>
+                        <div className="slide-feature-title">Mix & Match</div>
+                        <div className="slide-feature-subtitle">Select any strains</div>
+                      </div>
+                    </div>
+
+                    <div className="slide-feature-item">
+                      <div className="slide-feature-icon">
+                        <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M7 7h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        </svg>
+                      </div>
+                      <div>
+                        <div className="slide-feature-title">Instant Savings</div>
+                        <div className="slide-feature-subtitle">Save up to 40%</div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
                 {slide.id === 3 && (
                   <div className="slide-features-grid">
                     <div className="slide-feature-item">
@@ -327,8 +389,8 @@ export default function Home() {
                 )}
 
                 <NavLink to={slide.link}>
-                  <button className="slide-btn" style={{ marginTop: slide.id === 3 ? "1.25rem" : "0" }}>
-                    {slide.id === 3 && (
+                  <button className="slide-btn" style={{ marginTop: (slide.id === 3 || slide.id === 0) ? "1.25rem" : "0" }}>
+                    {(slide.id === 3 || slide.id === 0) && (
                       <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" style={{ marginRight: "8px", verticalAlign: "middle", display: "inline-block" }}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z" />
                         <path strokeLinecap="round" strokeLinejoin="round" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 011-1v-4h3l3.293 3.293a1 1 0 01.171.344l.536 2.144a1 1 0 01-.97 1.242H13" />

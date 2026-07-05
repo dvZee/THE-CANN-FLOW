@@ -194,7 +194,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
     const happyHourDiscount = happyHourActive ? Math.min(10, subtotal) : 0;
     const runningSubtotal = subtotal - happyHourDiscount;
-    const loyaltyDiscount = Math.floor(runningSubtotal / 50) * 5;
+    const loyaltyDiscount = 0; // Loyalty discount is applied to the next order, not the current one
     const referralDiscount = referralApplied ? Math.min(20, runningSubtotal - loyaltyDiscount) : 0;
     const total = Math.max(0, subtotal - happyHourDiscount - loyaltyDiscount - referralDiscount);
 

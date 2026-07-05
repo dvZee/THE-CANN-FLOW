@@ -3,7 +3,7 @@ export interface Product {
   name: string;
   brand: string;
   description: string;
-  category: string; // 'Hybrid' | 'Indica' | 'Sativa' | 'Pre-rolls' | 'Vapes' | 'Topicals' | 'Edibles'
+  category: string; // 'Hybrid' | 'Indica' | 'Sativa' | 'Pre-rolls' | 'Vapes' | 'Topicals' | 'Edibles' | 'Concentrates'
   price: number;
   originalPrice?: number;
   thc: string;
@@ -187,5 +187,36 @@ export const INITIAL_PRODUCTS: Product[] = [
     isFeatured: false,
     weight: "40g",
     weights: ["40g"]
+  },
+  {
+    id: "concentrate-shatter-1",
+    name: "Pineapple Express Shatter",
+    brand: "Flow Extracts",
+    description: "Premium Sativa shatter offering a sweet tropical terpene profile. Yields rapid-acting cerebral focus and daytime energy.",
+    category: "Concentrates",
+    price: 40.00,
+    originalPrice: 50.00,
+    thc: "78.50%",
+    rating: 4.8,
+    reviewsCount: 19,
+    image: "https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=400&q=80",
+    isFeatured: true,
+    weight: "1g",
+    weights: ["1g", "2g"]
+  },
+  {
+    id: "concentrate-resin-1",
+    name: "Live Resin Sugar Badder",
+    brand: "High Flyer",
+    description: "A rich, golden Live Resin Sugar Badder made from freshly harvested frozen flowers. Offers full-spectrum terpenes and heavy body relaxation.",
+    category: "Concentrates",
+    price: 45.00,
+    thc: "84.20%",
+    rating: 4.9,
+    reviewsCount: 27,
+    image: "https://images.unsplash.com/photo-1596272875729-ed2ff7d6d9c5?w=400&q=80",
+    isFeatured: false,
+    weight: "1g",
+    weights: ["1g"]
   }
 ];

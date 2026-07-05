@@ -226,12 +226,20 @@ function AppContent() {
                 <li><NavLink to="/" end className={({ isActive }) => `nav-item-link ${isActive ? "active" : ""}`}>MENU</NavLink></li>
                 <li><NavLink to="/deals" className={({ isActive }) => `nav-item-link ${isActive ? "active" : ""}`}>OFFERS & LOYALTY</NavLink></li>
                 <li>
+                  <NavLink to="/delivery" className={({ isActive }) => `nav-item-link ${isActive ? "active" : ""}`}>
+                    <svg width="15" height="15" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" style={{ marginRight: '6px', verticalAlign: '-1px', display: 'inline-block' }}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1-1v10a1 1 0 001 1h1m8-1a1 1 0 011-1v-4h3l3.293 3.293a1 1 0 01.171.344l.536 2.144a1 1 0 01-.97 1.242H13" />
+                    </svg>
+                    DELIVERY INFO
+                  </NavLink>
+                </li>
+                <li>
                   <NavLink to="/contact" className={({ isActive }) => `nav-item-link ${isActive ? "active" : ""}`}>
                     <svg width="15" height="15" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" style={{ marginRight: '6px', verticalAlign: '-1px', display: 'inline-block' }}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                     </svg>
-                    CONTACT & DELIVERY
+                    CONTACT
                   </NavLink>
                 </li>
                 <li><NavLink to="/checkout" className={({ isActive }) => `nav-item-link ${isActive ? "active" : ""}`}>CHECKOUT</NavLink></li>
@@ -263,12 +271,18 @@ function AppContent() {
               <div className={`mobile-nav-menu ${isMobileMenuOpen ? "active" : ""}`}>
                 <NavLink to="/" end className="mobile-nav-item" onClick={() => setIsMobileMenuOpen(false)}>MENU</NavLink>
                 <NavLink to="/deals" className="mobile-nav-item" onClick={() => setIsMobileMenuOpen(false)}>OFFERS & LOYALTY</NavLink>
+                <NavLink to="/delivery" className="mobile-nav-item" onClick={() => setIsMobileMenuOpen(false)} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
+                  <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 011-1v-4h3l3.293 3.293a1 1 0 01.171.344l.536 2.144a1 1 0 01-.97 1.242H13" />
+                  </svg>
+                  DELIVERY INFO
+                </NavLink>
                 <NavLink to="/contact" className="mobile-nav-item" onClick={() => setIsMobileMenuOpen(false)} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
                   <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                   </svg>
-                  CONTACT & DELIVERY
+                  CONTACT
                 </NavLink>
                 <NavLink to="/checkout" className="mobile-nav-item" onClick={() => setIsMobileMenuOpen(false)}>CHECKOUT</NavLink>
                 <div className="mobile-status-badge">
@@ -413,31 +427,8 @@ function AppContent() {
           </div>
 
           {/* Footer Section */}
-          <footer style={{ background: "var(--bg-surface-hover)", borderTop: "1px solid var(--border-color)", padding: "4rem 0 2rem", marginTop: "auto" }}>
-            <div className="container-custom" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: "2rem", marginBottom: "3rem" }}>
-              <div>
-                <h4 style={{ fontFamily: "var(--font-heading)", color: "var(--text-main)", marginBottom: "1rem", fontSize: "1.2rem", fontWeight: 700 }}>THE CANN FLOW</h4>
-                <p style={{ color: "var(--text-muted)", fontSize: "0.9rem", lineHeight: "1.6" }}>
-                  Same-day premium discreet cannabis delivery services in North York and the Greater Toronto Area (GTA).
-                </p>
-              </div>
-              <div>
-                <h4 style={{ fontFamily: "var(--font-heading)", color: "var(--text-main)", marginBottom: "1rem", fontSize: "1.2rem", fontWeight: 700 }}>HOURS OF OPERATION</h4>
-                <p style={{ color: "var(--text-muted)", fontSize: "0.9rem", lineHeight: "1.6" }}>
-                  Monday - Thursday: 10:00 - 21:00<br />
-                  Friday - Saturday: 10:00 - 22:00<br />
-                  Sunday: 12:00 - 20:00
-                </p>
-              </div>
-              <div>
-                <h4 style={{ fontFamily: "var(--font-heading)", color: "var(--text-main)", marginBottom: "1rem", fontSize: "1.2rem", fontWeight: 700 }}>GET IN TOUCH</h4>
-                <p style={{ color: "var(--text-muted)", fontSize: "0.9rem", lineHeight: "1.6" }}>
-                  Phone & Text: +1 (416) 456-7759<br />
-                  Delivery Areas: North York, Toronto, and GTA
-                </p>
-              </div>
-            </div>
-            <div className="container-custom" style={{ borderTop: "1px solid var(--border-color)", paddingTop: "1.5rem", display: "flex", justifyContent: "space-between", flexWrap: "wrap", gap: "1rem", fontSize: "0.85rem", color: "var(--text-muted)" }}>
+          <footer style={{ background: "var(--bg-surface-hover)", borderTop: "1px solid var(--border-color)", padding: "2rem 0", marginTop: "auto" }}>
+            <div className="container-custom" style={{ display: "flex", justifyContent: "space-between", flexWrap: "wrap", gap: "1rem", fontSize: "0.85rem", color: "var(--text-muted)" }}>
               <span>&copy; {new Date().getFullYear()} thecannflow.com</span>
               <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
                 <a 

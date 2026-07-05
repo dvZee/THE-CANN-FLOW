@@ -4,8 +4,8 @@ import { useNotifications } from "../context/CartContext";
 
 export function meta({}: Route.MetaArgs) {
   return [
-    { title: "Contact & Delivery | The Cann Flow" },
-    { name: "description", content: "Contact details and delivery info. Call & Text: +1 (416) 456-7759. Same-day delivery in North York & GTA." },
+    { title: "Contact Us | The Cann Flow" },
+    { name: "description", content: "Contact details and inquiry form. Call & Text: 416 456 7759. We respond promptly." },
   ];
 }
 
@@ -120,8 +120,13 @@ export default function Contact() {
       
       {/* Page Title */}
       <div style={{ textAlign: "center", marginBottom: "3rem" }}>
-        <h1 style={{ fontSize: "2.5rem", fontFamily: "var(--font-heading)", fontWeight: 800, marginBottom: "0.5rem" }}>CONTACT & DELIVERY</h1>
-        <p style={{ color: "var(--text-muted)", fontSize: "1.05rem" }}>Call & text, order online directly, or check our delivery coverage zones.</p>
+        <h1 style={{ fontSize: "2.5rem", fontFamily: "var(--font-heading)", fontWeight: 800, marginBottom: "0.5rem", display: "flex", alignItems: "center", justifyContent: "center", gap: "0.75rem" }}>
+          <svg width="32" height="32" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24" style={{ color: "var(--color-primary)" }}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+          </svg>
+          CONTACT US
+        </h1>
+        <p style={{ color: "var(--text-muted)", fontSize: "1.05rem" }}>Call & text, order online directly, or send us a message below.</p>
       </div>
 
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: "2.5rem", alignItems: "start" }}>
@@ -134,14 +139,17 @@ export default function Contact() {
             <h2 style={{ fontSize: "1.35rem", fontWeight: 700, color: "var(--text-main)", marginBottom: "0.5rem" }}>STORE STATUS</h2>
             <div style={{ color: "var(--text-muted)", fontSize: "0.85rem", marginBottom: "1rem" }}>{currentTimeStr}</div>
             
-            <div style={{ display: "flex", alignItems: "center", gap: "1rem", background: "var(--bg-input)", border: "1px solid var(--border-color)", padding: "1.25rem", borderRadius: "10px", marginBottom: "1rem" }}>
-              <span className={`badge-status ${isOpen ? "open" : "closed"}`} style={{ padding: "0.4rem 0.8rem", fontSize: "0.85rem" }}>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", background: "var(--bg-input)", border: "1px solid var(--border-color)", padding: "1rem", borderRadius: "8px", marginBottom: "1rem" }}>
+              <span style={{ fontSize: "0.9rem", fontWeight: 600 }}>Current Status:</span>
+              <span className={`badge-status ${isOpen ? "open" : "closed"}`} style={{ borderColor: isOpen ? "var(--color-primary)" : "var(--color-danger)", padding: "0.4rem 0.8rem", fontSize: "0.85rem" }}>
                 {isOpen ? "OPEN" : "CLOSED"}
               </span>
-              <span style={{ fontSize: "0.95rem", fontWeight: 500, color: "var(--text-main)" }}>
-                {openingStatusText}
-              </span>
             </div>
+            {openingStatusText && (
+              <p style={{ color: "var(--text-muted)", fontSize: "0.85rem", marginTop: "0.5rem", marginBottom: "1.5rem", lineHeight: "1.5" }}>
+                {openingStatusText}
+              </p>
+            )}
 
             <table style={{ width: "100%", fontSize: "0.9rem", color: "var(--text-muted)", marginTop: "1.5rem" }}>
               <tbody>
@@ -174,7 +182,7 @@ export default function Contact() {
                 </div>
                 <div>
                   <span style={{ fontSize: "0.75rem", color: "var(--text-muted)", display: "block" }}>CALL & TEXT</span>
-                  <a href="tel:+14164567759" style={{ fontWeight: 600, color: "var(--text-main)" }}>+1 (416) 456-7759</a>
+                  <a href="tel:+14164567759" style={{ fontWeight: 600, color: "var(--text-main)" }}>416 456 7759</a>
                 </div>
               </div>
 
@@ -186,7 +194,7 @@ export default function Contact() {
                 </div>
                 <div>
                   <span style={{ fontSize: "0.75rem", color: "var(--text-muted)", display: "block" }}>ORDER ONLINE</span>
-                  <span style={{ fontWeight: 600, color: "var(--text-main)" }}>Available directly on site</span>
+                  <span style={{ fontWeight: 600, color: "var(--text-main)" }}>available on site</span>
                 </div>
               </div>
 
@@ -199,7 +207,7 @@ export default function Contact() {
                 </div>
                 <div>
                   <span style={{ fontSize: "0.75rem", color: "var(--text-muted)", display: "block" }}>LOCATION</span>
-                  <span style={{ fontWeight: 600, color: "var(--text-main)" }}>North York & GTA</span>
+                  <span style={{ fontWeight: 600, color: "var(--text-main)" }}>north York, & gta</span>
                 </div>
               </div>
             </div>
@@ -207,40 +215,9 @@ export default function Contact() {
 
         </div>
 
-        {/* Right Side: Delivery Details & Contact Form */}
+        {/* Right Side: Contact Form */}
         <div style={{ display: "flex", flexDirection: "column", gap: "2rem" }}>
           
-          {/* Delivery Zones */}
-          <section className="glass-panel" style={{ padding: "2rem" }}>
-            <h2 style={{ fontSize: "1.35rem", fontWeight: 700, color: "var(--text-main)", marginBottom: "1rem" }}>DELIVERY COVERAGE</h2>
-            <p style={{ color: "var(--text-muted)", fontSize: "0.9rem", lineHeight: "1.6", marginBottom: "1.5rem" }}>
-              We offer discreet, premium delivery to North York & GTA.
-            </p>
-
-            <div style={{ display: "grid", gap: "1.25rem" }}>
-              <div style={{ borderLeft: "3px solid var(--color-primary)", paddingLeft: "1rem" }}>
-                <h4 style={{ fontWeight: 700, color: "var(--text-main)", fontSize: "0.95rem" }}>North York</h4>
-                <p style={{ color: "var(--text-muted)", fontSize: "0.85rem", marginTop: "0.25rem" }}>
-                  Minimum order 50 for free delivery. Under minimum: 5–10 delivery fee.
-                </p>
-              </div>
-
-              <div style={{ borderLeft: "3px solid var(--color-primary)", paddingLeft: "1rem" }}>
-                <h4 style={{ fontWeight: 700, color: "var(--text-main)", fontSize: "0.95rem" }}>GTA</h4>
-                <p style={{ color: "var(--text-muted)", fontSize: "0.85rem", marginTop: "0.25rem" }}>
-                  Minimum order 60 for free delivery. Under minimum: 5–20 delivery fee.
-                </p>
-              </div>
-
-              <div style={{ borderLeft: "3px solid var(--color-secondary)", paddingLeft: "1rem" }}>
-                <h4 style={{ fontWeight: 700, color: "var(--text-main)", fontSize: "0.95rem" }}>Canada Post Mail Orders</h4>
-                <p style={{ color: "var(--text-muted)", fontSize: "0.85rem", marginTop: "0.25rem" }}>
-                  Canada-wide shipping. Flat mailing fee: 15.00.
-                </p>
-              </div>
-            </div>
-          </section>
-
           {/* Feedback Contact Form */}
           <section className="glass-panel" style={{ padding: "2rem" }}>
             <h2 style={{ fontSize: "1.35rem", fontWeight: 700, color: "var(--text-main)", marginBottom: "0.5rem" }}>Send Us a Message</h2>
@@ -277,7 +254,7 @@ export default function Contact() {
                 <label className="form-label" style={{ fontSize: "0.75rem", letterSpacing: "0.05em" }}>PHONE</label>
                 <input
                   type="tel"
-                  placeholder="e.g. +1 (416) 456-7759"
+                  placeholder="e.g. 416 456 7759"
                   className="form-input"
                   value={contactPhone}
                   onChange={(e) => setContactPhone(e.target.value)}
