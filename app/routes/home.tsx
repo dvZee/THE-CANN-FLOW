@@ -9,8 +9,19 @@ import { getProducts } from "../data/db.client";
 
 export function meta({}: Route.MetaArgs) {
   return [
-    { title: "Menu | The Cann Flow - Delivery North York & GTA" },
-    { name: "description", content: "Discreet same-day delivery in North York & GTA. Flowers, pre-rolls, vapes, and topicals." },
+    { title: "Menu | The Cann Flow - Cannabis Delivery North York & GTA" },
+    { name: "description", content: "Discreet same-day premium cannabis delivery in North York & GTA. Flowers, pre-rolls, vapes, and edibles." },
+    { name: "keywords", content: "cannabis delivery, weed delivery North York, GTA weed delivery, same-day mail order, cannabis Canada" },
+    { name: "robots", content: "index, follow" },
+    { tagName: "link", rel: "canonical", href: "https://thecannflow.com/" },
+    { property: "og:type", content: "website" },
+    { property: "og:title", content: "The Cann Flow | Premium Cannabis Delivery North York & GTA" },
+    { property: "og:description", content: "Fast, discreet same-day cannabis delivery. High-quality flowers, edibles, pre-rolls, and vapes." },
+    { property: "og:url", content: "https://thecannflow.com/" },
+    { property: "og:image", content: "https://thecannflow.com/favicon.svg" },
+    { name: "twitter:card", content: "summary" },
+    { name: "twitter:title", content: "The Cann Flow | Cannabis Delivery North York & GTA" },
+    { name: "twitter:description", content: "Premium cannabis selection delivered with care same-day in North York and the GTA." }
   ];
 }
 
@@ -212,6 +223,54 @@ export default function Home() {
 
   return (
     <div className="container-custom" style={{ marginTop: "1rem" }}>
+      {/* Schema.org JSON-LD Structured Data */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Store",
+            "name": "The Cann Flow",
+            "image": "https://thecannflow.com/favicon.svg",
+            "@id": "https://thecannflow.com/#store",
+            "url": "https://thecannflow.com",
+            "telephone": "+1-416-456-7759",
+            "priceRange": "$$",
+            "address": {
+              "@type": "PostalAddress",
+              "addressLocality": "North York",
+              "addressRegion": "ON",
+              "addressCountry": "CA"
+            },
+            "geo": {
+              "@type": "GeoCoordinates",
+              "latitude": 43.7615,
+              "longitude": -79.4111
+            },
+            "openingHoursSpecification": [
+              {
+                "@type": "OpeningHoursSpecification",
+                "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday"],
+                "opens": "10:00",
+                "closes": "21:00"
+              },
+              {
+                "@type": "OpeningHoursSpecification",
+                "dayOfWeek": ["Friday", "Saturday"],
+                "opens": "10:00",
+                "closes": "22:00"
+              },
+              {
+                "@type": "OpeningHoursSpecification",
+                "dayOfWeek": "Sunday",
+                "opens": "12:00",
+                "closes": "21:00"
+              }
+            ],
+            "areaServed": ["North York", "Greater Toronto Area"]
+          })
+        }}
+      />
       
       {/* Search Bar */}
       <div style={{ margin: "1.5rem 0", display: "flex", gap: "1rem", position: "relative" }}>
@@ -465,6 +524,57 @@ export default function Home() {
           <p>We couldn't find any products matching your search term "{searchQuery}". Try something else.</p>
         </div>
       )}
+
+      {/* Premium cannabis info section & store hours */}
+      <section className="glass-panel" style={{ padding: "2.5rem", marginTop: "4rem", marginBottom: "2rem" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: "2.5rem", alignItems: "center" }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+            <h2 style={{ fontSize: "1.8rem", fontWeight: 800, color: "var(--text-main)", fontFamily: "var(--font-heading)" }}>
+              Premium Cannabis, Delivered With Care
+            </h2>
+            <p style={{ color: "var(--text-muted)", fontSize: "0.95rem", lineHeight: "1.6" }}>
+              Looking for high-quality cannabis delivered right to your door? We offer a carefully selected range of premium flowers, edibles, and concentrates with fast, discreet, and reliable delivery. Whether you're a first-time customer or a regular shopper, we're committed to providing exceptional products and a seamless ordering experience.
+            </p>
+            <p style={{ color: "var(--text-muted)", fontSize: "0.95rem", lineHeight: "1.6" }}>
+              Browse our full collection, place your order in just a few clicks, and enjoy convenient delivery during our operating hours. Have questions? Our team is always here to help.
+            </p>
+            
+            {/* Mail Delivery Fee Notice */}
+            <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", background: "rgba(16, 185, 129, 0.08)", border: "1px solid var(--color-primary)", padding: "1rem", borderRadius: "10px", marginTop: "0.5rem" }}>
+              <svg width="24" height="24" fill="none" stroke="var(--color-primary)" strokeWidth="2.5" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M3 19.5A2.5 2.5 0 015.625 17h12.75A2.5 2.5 0 0121 19.5M3 19.5V8.25A2.25 2.25 0 015.25 6h13.5A2.25 2.25 0 0121 8.25V19.5m-18 0A2.5 2.5 0 005.625 22h12.75A2.5 2.5 0 0021 19.5M3 16.5h18M3 12h18M3 7.5h18M12 2v4" />
+              </svg>
+              <div>
+                <span style={{ display: "block", fontSize: "0.85rem", fontWeight: 700, color: "var(--text-main)" }}>Mail Delivery Available</span>
+                <span style={{ display: "block", fontSize: "0.75rem", color: "var(--text-muted)" }}>Canada-wide shipping with a flat $15.00 delivery fee</span>
+              </div>
+            </div>
+          </div>
+          
+          <div style={{ background: "var(--bg-surface-hover)", padding: "2rem", borderRadius: "var(--radius-md)", border: "1px solid var(--border-color)" }}>
+            <h3 style={{ fontSize: "1.25rem", fontWeight: 700, color: "var(--text-main)", marginBottom: "1rem", borderBottom: "1px solid var(--border-color)", paddingBottom: "0.5rem" }}>
+              Store Hours
+            </h3>
+            <ul style={{ listStyle: "none", display: "grid", gap: "0.75rem", fontSize: "0.9rem", color: "var(--text-muted)", padding: 0 }}>
+              <li style={{ display: "flex", justifyContent: "space-between", borderBottom: "1px dashed var(--border-color)", paddingBottom: "0.5rem" }}>
+                <span style={{ fontWeight: 600 }}>Monday – Thursday:</span>
+                <span>10:00 AM – 9:00 PM</span>
+              </li>
+              <li style={{ display: "flex", justifyContent: "space-between", borderBottom: "1px dashed var(--border-color)", paddingBottom: "0.5rem" }}>
+                <span style={{ fontWeight: 600 }}>Friday – Saturday:</span>
+                <span>10:00 AM – 10:00 PM</span>
+              </li>
+              <li style={{ display: "flex", justifyContent: "space-between", paddingBottom: "0.5rem" }}>
+                <span style={{ fontWeight: 600 }}>Sunday:</span>
+                <span>12:00 PM – 9:00 PM</span>
+              </li>
+            </ul>
+            <p style={{ marginTop: "1.5rem", fontSize: "0.85rem", color: "var(--text-muted)", fontStyle: "italic", lineHeight: "1.5" }}>
+              Explore our premium selection today and experience safe, convenient, and discreet cannabis delivery.
+            </p>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }

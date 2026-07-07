@@ -9,6 +9,8 @@ export function meta({}: Route.MetaArgs) {
   return [
     { title: "Admin Portal | The Cann Flow" },
     { name: "description", content: "Management dashboard for product catalog and delivery orders." },
+    { name: "robots", content: "noindex, nofollow" },
+    { tagName: "link", rel: "canonical", href: "https://thecannflow.com/admin" }
   ];
 }
 

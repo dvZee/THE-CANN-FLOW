@@ -139,7 +139,7 @@ function AppContent() {
       let nextTime = "";
 
       if (dayStr === "Sunday") {
-        if (decimalTime >= 12 && decimalTime < 20) {
+        if (decimalTime >= 12 && decimalTime < 21) {
           open = true;
         } else if (decimalTime < 12) {
           nextTime = "Today at 12:00";

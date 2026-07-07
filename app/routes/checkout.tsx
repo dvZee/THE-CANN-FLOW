@@ -6,8 +6,19 @@ import { getOrders, saveOrders } from "../data/db.client";
 
 export function meta({}: Route.MetaArgs) {
   return [
-    { title: "Checkout | The Cann Flow" },
-    { name: "description", content: "Complete your delivery information. Same-day delivery in North York and GTA." },
+    { title: "Checkout | The Cann Flow - Finalize Order" },
+    { name: "description", content: "Complete your checkout and secure same-day cannabis delivery details. Pay Cash or e-Transfer upon arrival." },
+    { name: "keywords", content: "secure checkout, weed delivery checkout, cash on delivery weed, emt weed order" },
+    { name: "robots", content: "noindex, follow" },
+    { tagName: "link", rel: "canonical", href: "https://thecannflow.com/checkout" },
+    { property: "og:type", content: "website" },
+    { property: "og:title", content: "Checkout | The Cann Flow - Finalize Order" },
+    { property: "og:description", content: "Complete your checkout and secure same-day cannabis delivery details. Pay Cash or e-Transfer upon arrival." },
+    { property: "og:url", content: "https://thecannflow.com/checkout" },
+    { property: "og:image", content: "https://thecannflow.com/favicon.svg" },
+    { name: "twitter:card", content: "summary" },
+    { name: "twitter:title", content: "Secure Order Checkout | The Cann Flow" },
+    { name: "twitter:description", content: "Review items in basket and submit order details for same-day GTA delivery or mail order." }
   ];
 }
 

@@ -3,8 +3,19 @@ import type { Route } from "./+types/delivery";
 
 export function meta({}: Route.MetaArgs) {
   return [
-    { title: "Delivery Info | The Cann Flow" },
-    { name: "description", content: "Discreet premium cannabis delivery in North York & GTA. Check delivery minimums, coverage zones, and mailing fees." },
+    { title: "Delivery Info | The Cann Flow - Cannabis Delivery Zones" },
+    { name: "description", content: "Check weed delivery minimums, coverage zones in North York & GTA, and flat mailing fees across Canada." },
+    { name: "keywords", content: "weed delivery zones, North York delivery fee, GTA cannabis delivery minimum, mail order weed Canada" },
+    { name: "robots", content: "index, follow" },
+    { tagName: "link", rel: "canonical", href: "https://thecannflow.com/delivery" },
+    { property: "og:type", content: "website" },
+    { property: "og:title", content: "Delivery Info | The Cann Flow - Cannabis Delivery Zones" },
+    { property: "og:description", content: "Check weed delivery minimums, coverage zones in North York & GTA, and flat mailing fees across Canada." },
+    { property: "og:url", content: "https://thecannflow.com/delivery" },
+    { property: "og:image", content: "https://thecannflow.com/favicon.svg" },
+    { name: "twitter:card", content: "summary" },
+    { name: "twitter:title", content: "Delivery Coverage & Rates | The Cann Flow" },
+    { name: "twitter:description", content: "Verify delivery zones, minimum order requirements for free delivery, and mail order details." }
   ];
 }
 
@@ -52,9 +63,9 @@ export default function Delivery() {
       let statusText = "";
 
       if (day === "Sunday") {
-        if (decimalTime >= 12 && decimalTime < 20) {
+        if (decimalTime >= 12 && decimalTime < 21) {
           open = true;
-          statusText = "We are open until 8 PM (20:00) tonight.";
+          statusText = "We are open until 9 PM (21:00) tonight.";
         } else if (decimalTime < 12) {
           statusText = "Closed. We open today at 12 PM (12:00).";
         } else {
@@ -171,7 +182,7 @@ export default function Delivery() {
               </tr>
               <tr>
                 <td style={{ padding: "0.6rem 0", fontWeight: 600, color: "var(--text-main)" }}>Sunday</td>
-                <td style={{ padding: "0.6rem 0", textAlign: "right" }}>12:00 - 20:00</td>
+                <td style={{ padding: "0.6rem 0", textAlign: "right" }}>12:00 - 21:00</td>
               </tr>
             </tbody>
           </table>

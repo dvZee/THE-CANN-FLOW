@@ -4,8 +4,19 @@ import { useNotifications } from "../context/CartContext";
 
 export function meta({}: Route.MetaArgs) {
   return [
-    { title: "Contact Us | The Cann Flow" },
-    { name: "description", content: "Contact details and inquiry form. Call & Text: 416 456 7759. We respond promptly." },
+    { title: "Contact Us | The Cann Flow - Get in Touch" },
+    { name: "description", content: "Have questions? Reach out to The Cann Flow team. Call & Text: 416 456 7759. Same-day delivery assistance in GTA." },
+    { name: "keywords", content: "contact weed delivery, the cann flow phone, toronto weed delivery phone, mail order support weed" },
+    { name: "robots", content: "index, follow" },
+    { tagName: "link", rel: "canonical", href: "https://thecannflow.com/contact" },
+    { property: "og:type", content: "website" },
+    { property: "og:title", content: "Contact Us | The Cann Flow - Get in Touch" },
+    { property: "og:description", content: "Have questions? Reach out to The Cann Flow team. Call & Text: 416 456 7759. Same-day delivery assistance in GTA." },
+    { property: "og:url", content: "https://thecannflow.com/contact" },
+    { property: "og:image", content: "https://thecannflow.com/favicon.svg" },
+    { name: "twitter:card", content: "summary" },
+    { name: "twitter:title", content: "Contact The Cann Flow" },
+    { name: "twitter:description", content: "Call or text us at 416 456 7759 for ordering assistance and prompt customer support." }
   ];
 }
 
@@ -63,9 +74,9 @@ export default function Contact() {
       let statusText = "";
 
       if (day === "Sunday") {
-        if (decimalTime >= 12 && decimalTime < 20) {
+        if (decimalTime >= 12 && decimalTime < 21) {
           open = true;
-          statusText = "We are open until 8 PM (20:00) tonight.";
+          statusText = "We are open until 9 PM (21:00) tonight.";
         } else if (decimalTime < 12) {
           statusText = "Closed. We open today at 12 PM (12:00).";
         } else {
@@ -163,7 +174,7 @@ export default function Contact() {
                 </tr>
                 <tr>
                   <td style={{ padding: "0.6rem 0", fontWeight: 600, color: "var(--text-main)" }}>Sunday</td>
-                  <td style={{ padding: "0.6rem 0", textAlign: "right" }}>12:00 - 20:00</td>
+                  <td style={{ padding: "0.6rem 0", textAlign: "right" }}>12:00 - 21:00</td>
                 </tr>
               </tbody>
             </table>

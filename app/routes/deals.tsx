@@ -4,8 +4,19 @@ import type { Product } from "../data/catalog";
 
 export function meta({}: Route.MetaArgs) {
   return [
-    { title: "Offers & Loyalty | The Cann Flow" },
-    { name: "description", content: "Explore cannabis discounts, Happy Hour specials, Loyalty tiers, and Mix & Match flower deals." },
+    { title: "Offers & Loyalty | The Cann Flow - Cannabis Deals" },
+    { name: "description", content: "Explore exclusive cannabis discounts, Happy Hour specials, loyalty rewards, and Mix & Match weed flower deals." },
+    { name: "keywords", content: "cannabis deals, weed discount North York, happy hour weed, mix and match flower, loyalty rewards weed" },
+    { name: "robots", content: "index, follow" },
+    { tagName: "link", rel: "canonical", href: "https://thecannflow.com/deals" },
+    { property: "og:type", content: "website" },
+    { property: "og:title", content: "Offers & Loyalty | The Cann Flow - Cannabis Deals" },
+    { property: "og:description", content: "Explore exclusive discounts, Happy Hour specials, loyalty rewards, and Mix & Match flower deals." },
+    { property: "og:url", content: "https://thecannflow.com/deals" },
+    { property: "og:image", content: "https://thecannflow.com/favicon.svg" },
+    { name: "twitter:card", content: "summary" },
+    { name: "twitter:title", content: "Offers & Loyalty | The Cann Flow" },
+    { name: "twitter:description", content: "Get the best weed flower deals, daily happy hour savings, and stackable loyalty discounts." }
   ];
 }
 
