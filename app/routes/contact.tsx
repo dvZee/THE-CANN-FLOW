@@ -6,7 +6,7 @@ export function meta({}: Route.MetaArgs) {
   return [
     { title: "Contact Us | The Cann Flow - Get in Touch" },
     { name: "description", content: "Have questions? Reach out to The Cann Flow team. Call & Text: 416 456 7759. Same-day delivery assistance in GTA." },
-    { name: "keywords", content: "contact weed delivery, the cann flow phone, toronto weed delivery phone, mail order support weed" },
+    { name: "keywords", content: "contact weed delivery, the cann flow phone, toronto weed delivery phone, same day delivery support" },
     { name: "robots", content: "index, follow" },
     { tagName: "link", rel: "canonical", href: "https://thecannflow.com/contact" },
     { property: "og:type", content: "website" },

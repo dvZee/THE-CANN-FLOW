@@ -193,12 +193,7 @@ function AppContent() {
           {!ageVerified && (
             <div className="age-gate-container">
               <div className="age-gate-box">
-                <svg className="age-gate-logo" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/>
-                  <path d="M12 6v6l4 2"/>
-                  <path d="M7 12h10"/>
-                  <path d="M12 7v10"/>
-                </svg>
+                <img src="/logo.png" alt="The Cann Flow" style={{ width: "180px", height: "180px", objectFit: "contain", marginBottom: "1rem" }} />
                 <h1 className="age-gate-title">19+ AGE VERIFICATION</h1>
                 <p className="age-gate-text">
                   You must be 19 years of age or older to enter. We deliver to North York & the GTA same-day.
@@ -215,10 +210,7 @@ function AppContent() {
           <header className="site-header">
             <div className="container-custom nav-wrapper">
               <NavLink to="/" className="logo-link">
-                {/* SVG Premium Leaf Icon */}
-                <svg className="logo-icon" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M12,2C11.5,4 10,7.5 9,8C8,8.5 4.5,7.5 4,8C3.5,8.5 5.5,11 6,12C6.5,13 5,16.5 5.5,17C6,17.5 8.5,15.5 9.5,16C10.5,16.5 11,20 12,20C13,20 13.5,16.5 14.5,16C15.5,15.5 18,17.5 18.5,17C19,16.5 17.5,13 18,12C18.5,11 20.5,8.5 20,8C19.5,7.5 16,8.5 15,8C14,7.5 12.5,4 12,2M12,8C12.5,8 13,8.5 13,9C13,9.5 12.5,10 12,10C11.5,10 11,9.5 11,9C11,8.5 11.5,8 12,8M9.5,9.5C10,9.5 10.5,10 10.5,10.5C10.5,11 10,11.5 9.5,11.5C9,11.5 8.5,11 8.5,10.5C8.5,10 9,9.5 9.5,9.5M14.5,9.5C15,9.5 15.5,10 15.5,10.5C15.5,11 15,11.5 14.5,11.5C14,11.5 13.5,11 13.5,10.5C13.5,10 14,9.5 14.5,9.5M12,11.5C12.5,11.5 13,12 13,12.5C13,13 12.5,13.5 12,13.5C11.5,13.5 11,13 11,12.5C11,12 11.5,11.5 12,11.5Z"/>
-                </svg>
+                <img src="/logo.png" alt="The Cann Flow Logo" style={{ width: "42px", height: "42px", objectFit: "contain" }} />
                 <span>THE CANN FLOW</span>
               </NavLink>
 

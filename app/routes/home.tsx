@@ -11,7 +11,7 @@ export function meta({}: Route.MetaArgs) {
   return [
     { title: "Menu | The Cann Flow - Cannabis Delivery North York & GTA" },
     { name: "description", content: "Discreet same-day premium cannabis delivery in North York & GTA. Flowers, pre-rolls, vapes, and edibles." },
-    { name: "keywords", content: "cannabis delivery, weed delivery North York, GTA weed delivery, same-day mail order, cannabis Canada" },
+    { name: "keywords", content: "cannabis delivery, weed delivery North York, GTA weed delivery, same-day cannabis GTA, premium local cannabis" },
     { name: "robots", content: "index, follow" },
     { tagName: "link", rel: "canonical", href: "https://thecannflow.com/" },
     { property: "og:type", content: "website" },
@@ -50,6 +50,15 @@ export default function Home() {
   const slides: Slide[] = [
     {
       id: 0,
+      tag: "Premium Cannabis",
+      title: "",
+      description: "",
+      link: "/deals",
+      buttonText: "",
+      image: "/slider/hero_banner.png"
+    },
+    {
+      id: 1,
       tag: "Mix & Match Deal",
       title: "Mix & Match Flower Deals",
       description: "Choose multiple strains and customize your order. More choice. More control.",
@@ -58,7 +67,7 @@ export default function Home() {
       image: "/slider/mix_match.png"
     },
     {
-      id: 1,
+      id: 2,
       tag: "Happy Hour",
       title: "Daily 15:00 - 17:00",
       description: "Order during happy hour and save 10 off your order. Instant discount applied automatically at checkout.",
@@ -67,7 +76,7 @@ export default function Home() {
       image: "/slider/happy_hour.png"
     },
     {
-      id: 2,
+      id: 3,
       tag: "Loyalty Program",
       title: "Spend More, Save More",
       description: "Instant discounts on your order: 5 off every 50 spent. Start stacking your savings today.",
@@ -76,7 +85,7 @@ export default function Home() {
       image: "/slider/loyalty.png"
     },
     {
-      id: 3,
+      id: 4,
       tag: "FAST & DISCREET",
       title: "Premium Delivery to Your Door",
       description: "Serving North York and GTA. Free delivery on qualifying orders.",
@@ -335,130 +344,134 @@ export default function Home() {
           {slides.map((slide, idx) => (
             <div
               key={slide.id}
-              className={`hero-slide ${idx === activeSlide ? "active" : ""}`}
+              className={`hero-slide ${idx === activeSlide ? "active" : ""} ${slide.image === "/slider/hero_banner.png" ? "no-gradient" : ""}`}
               style={{ backgroundImage: `url(${slide.image})` }}
             >
-              <div className="slide-content">
-                <span className="slide-tag">{slide.tag}</span>
-                <h1 className="slide-title">{slide.title}</h1>
-                <p className="slide-desc" style={{ marginBottom: (slide.id === 3 || slide.id === 0) ? "1rem" : "2rem" }}>{slide.description}</p>
-                
-                {slide.id === 0 && (
-                  <div className="slide-features-grid">
-                    <div className="slide-feature-item">
-                      <div className="slide-feature-icon">
-                        <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-                        </svg>
+              {slide.image === "/slider/hero_banner.png" ? (
+                <NavLink to="/deals" style={{ position: "absolute", inset: 0, zIndex: 5, cursor: "pointer" }} aria-label="Shop Premium Cannabis Deals" />
+              ) : (
+                <div className="slide-content">
+                  <span className="slide-tag">{slide.tag}</span>
+                  <h1 className="slide-title">{slide.title}</h1>
+                  <p className="slide-desc" style={{ marginBottom: (slide.id === 4 || slide.id === 1) ? "1rem" : "2rem" }}>{slide.description}</p>
+                  
+                  {slide.id === 1 && (
+                    <div className="slide-features-grid">
+                      <div className="slide-feature-item">
+                        <div className="slide-feature-icon">
+                          <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                          </svg>
+                        </div>
+                        <div>
+                          <div className="slide-feature-title">Half-Ounce Bundle</div>
+                          <div className="slide-feature-subtitle">14g for 60.00</div>
+                        </div>
                       </div>
-                      <div>
-                        <div className="slide-feature-title">Half-Ounce Bundle</div>
-                        <div className="slide-feature-subtitle">14g for 60.00</div>
+                      
+                      <div className="slide-feature-item">
+                        <div className="slide-feature-icon">
+                          <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                          </svg>
+                        </div>
+                        <div>
+                          <div className="slide-feature-title">Ounce Bundle</div>
+                          <div className="slide-feature-subtitle">28g for 110.00</div>
+                        </div>
                       </div>
-                    </div>
-                    
-                    <div className="slide-feature-item">
-                      <div className="slide-feature-icon">
-                        <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-                        </svg>
-                      </div>
-                      <div>
-                        <div className="slide-feature-title">Ounce Bundle</div>
-                        <div className="slide-feature-subtitle">28g for 110.00</div>
-                      </div>
-                    </div>
 
-                    <div className="slide-feature-item">
-                      <div className="slide-feature-icon">
-                        <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 1121.21 8H18.25" />
-                        </svg>
+                      <div className="slide-feature-item">
+                        <div className="slide-feature-icon">
+                          <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 1121.21 8H18.25" />
+                          </svg>
+                        </div>
+                        <div>
+                          <div className="slide-feature-title">Mix & Match</div>
+                          <div className="slide-feature-subtitle">Select any strains</div>
+                        </div>
                       </div>
-                      <div>
-                        <div className="slide-feature-title">Mix & Match</div>
-                        <div className="slide-feature-subtitle">Select any strains</div>
+
+                      <div className="slide-feature-item">
+                        <div className="slide-feature-icon">
+                          <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M7 7h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                          </svg>
+                        </div>
+                        <div>
+                          <div className="slide-feature-title">Instant Savings</div>
+                          <div className="slide-feature-subtitle">Save up to 40%</div>
+                        </div>
                       </div>
                     </div>
+                  )}
 
-                    <div className="slide-feature-item">
-                      <div className="slide-feature-icon">
-                        <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M7 7h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                        </svg>
+                  {slide.id === 4 && (
+                    <div className="slide-features-grid">
+                      <div className="slide-feature-item">
+                        <div className="slide-feature-icon">
+                          <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 011-1v-4h3l3.293 3.293a1 1 0 01.171.344l.536 2.144a1 1 0 01-.97 1.242H13" />
+                          </svg>
+                        </div>
+                        <div>
+                          <div className="slide-feature-title">Fast Delivery</div>
+                          <div className="slide-feature-subtitle">Same day service</div>
+                        </div>
                       </div>
-                      <div>
-                        <div className="slide-feature-title">Instant Savings</div>
-                        <div className="slide-feature-subtitle">Save up to 40%</div>
+                      
+                      <div className="slide-feature-item">
+                        <div className="slide-feature-icon">
+                          <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                          </svg>
+                        </div>
+                        <div>
+                          <div className="slide-feature-title">Free Delivery</div>
+                          <div className="slide-feature-subtitle">On qualifying orders</div>
+                        </div>
+                      </div>
+
+                      <div className="slide-feature-item">
+                        <div className="slide-feature-icon">
+                          <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                          </svg>
+                        </div>
+                        <div>
+                          <div className="slide-feature-title">Discreet</div>
+                          <div className="slide-feature-subtitle">Plain packaging</div>
+                        </div>
+                      </div>
+
+                      <div className="slide-feature-item">
+                        <div className="slide-feature-icon">
+                          <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                          </svg>
+                        </div>
+                        <div>
+                          <div className="slide-feature-title">19+ Verified</div>
+                          <div className="slide-feature-subtitle">Age verification</div>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                )}
+                  )}
 
-                {slide.id === 3 && (
-                  <div className="slide-features-grid">
-                    <div className="slide-feature-item">
-                      <div className="slide-feature-icon">
-                        <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                  <NavLink to={slide.link}>
+                    <button className="slide-btn" style={{ marginTop: (slide.id === 4 || slide.id === 1) ? "1.25rem" : "0" }}>
+                      {(slide.id === 4 || slide.id === 1) && (
+                        <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" style={{ marginRight: "8px", verticalAlign: "middle", display: "inline-block" }}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z" />
                           <path strokeLinecap="round" strokeLinejoin="round" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 011-1v-4h3l3.293 3.293a1 1 0 01.171.344l.536 2.144a1 1 0 01-.97 1.242H13" />
                         </svg>
-                      </div>
-                      <div>
-                        <div className="slide-feature-title">Fast Delivery</div>
-                        <div className="slide-feature-subtitle">Same day service</div>
-                      </div>
-                    </div>
-                    
-                    <div className="slide-feature-item">
-                      <div className="slide-feature-icon">
-                        <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                      </div>
-                      <div>
-                        <div className="slide-feature-title">Free Delivery</div>
-                        <div className="slide-feature-subtitle">On qualifying orders</div>
-                      </div>
-                    </div>
-
-                    <div className="slide-feature-item">
-                      <div className="slide-feature-icon">
-                        <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-                        </svg>
-                      </div>
-                      <div>
-                        <div className="slide-feature-title">Discreet</div>
-                        <div className="slide-feature-subtitle">Plain packaging</div>
-                      </div>
-                    </div>
-
-                    <div className="slide-feature-item">
-                      <div className="slide-feature-icon">
-                        <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                        </svg>
-                      </div>
-                      <div>
-                        <div className="slide-feature-title">19+ Verified</div>
-                        <div className="slide-feature-subtitle">Age verification</div>
-                      </div>
-                    </div>
-                  </div>
-                )}
-
-                <NavLink to={slide.link}>
-                  <button className="slide-btn" style={{ marginTop: (slide.id === 3 || slide.id === 0) ? "1.25rem" : "0" }}>
-                    {(slide.id === 3 || slide.id === 0) && (
-                      <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" style={{ marginRight: "8px", verticalAlign: "middle", display: "inline-block" }}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z" />
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 011-1v-4h3l3.293 3.293a1 1 0 01.171.344l.536 2.144a1 1 0 01-.97 1.242H13" />
-                      </svg>
-                    )}
-                    {slide.buttonText}
-                  </button>
-                </NavLink>
-              </div>
+                      )}
+                      {slide.buttonText}
+                    </button>
+                  </NavLink>
+                </div>
+              )}
             </div>
           ))}
           <div className="slider-dots">
@@ -539,16 +552,7 @@ export default function Home() {
               Browse our full collection, place your order in just a few clicks, and enjoy convenient delivery during our operating hours. Have questions? Our team is always here to help.
             </p>
             
-            {/* Mail Delivery Fee Notice */}
-            <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", background: "rgba(16, 185, 129, 0.08)", border: "1px solid var(--color-primary)", padding: "1rem", borderRadius: "10px", marginTop: "0.5rem" }}>
-              <svg width="24" height="24" fill="none" stroke="var(--color-primary)" strokeWidth="2.5" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M3 19.5A2.5 2.5 0 015.625 17h12.75A2.5 2.5 0 0121 19.5M3 19.5V8.25A2.25 2.25 0 015.25 6h13.5A2.25 2.25 0 0121 8.25V19.5m-18 0A2.5 2.5 0 005.625 22h12.75A2.5 2.5 0 0021 19.5M3 16.5h18M3 12h18M3 7.5h18M12 2v4" />
-              </svg>
-              <div>
-                <span style={{ display: "block", fontSize: "0.85rem", fontWeight: 700, color: "var(--text-main)" }}>Mail Delivery Available</span>
-                <span style={{ display: "block", fontSize: "0.75rem", color: "var(--text-muted)" }}>Canada-wide shipping with a flat $15.00 delivery fee</span>
-              </div>
-            </div>
+
           </div>
           
           <div style={{ background: "var(--bg-surface-hover)", padding: "2rem", borderRadius: "var(--radius-md)", border: "1px solid var(--border-color)" }}>

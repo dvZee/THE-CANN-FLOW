@@ -4,18 +4,18 @@ import type { Route } from "./+types/delivery";
 export function meta({}: Route.MetaArgs) {
   return [
     { title: "Delivery Info | The Cann Flow - Cannabis Delivery Zones" },
-    { name: "description", content: "Check weed delivery minimums, coverage zones in North York & GTA, and flat mailing fees across Canada." },
-    { name: "keywords", content: "weed delivery zones, North York delivery fee, GTA cannabis delivery minimum, mail order weed Canada" },
+    { name: "description", content: "Check weed delivery minimums and coverage zones in North York & GTA." },
+    { name: "keywords", content: "weed delivery zones, North York delivery fee, GTA cannabis delivery minimum" },
     { name: "robots", content: "index, follow" },
     { tagName: "link", rel: "canonical", href: "https://thecannflow.com/delivery" },
     { property: "og:type", content: "website" },
     { property: "og:title", content: "Delivery Info | The Cann Flow - Cannabis Delivery Zones" },
-    { property: "og:description", content: "Check weed delivery minimums, coverage zones in North York & GTA, and flat mailing fees across Canada." },
+    { property: "og:description", content: "Check weed delivery minimums and coverage zones in North York & GTA." },
     { property: "og:url", content: "https://thecannflow.com/delivery" },
     { property: "og:image", content: "https://thecannflow.com/favicon.svg" },
     { name: "twitter:card", content: "summary" },
     { name: "twitter:title", content: "Delivery Coverage & Rates | The Cann Flow" },
-    { name: "twitter:description", content: "Verify delivery zones, minimum order requirements for free delivery, and mail order details." }
+    { name: "twitter:description", content: "Verify delivery zones and minimum order requirements for free delivery." }
   ];
 }
 
@@ -112,7 +112,7 @@ export default function Delivery() {
           </svg>
           DELIVERY INFO
         </h1>
-        <p style={{ color: "var(--text-muted)", fontSize: "1.05rem" }}>Check our delivery coverage zones, rates, minimum order requirements, and mailing policies.</p>
+        <p style={{ color: "var(--text-muted)", fontSize: "1.05rem" }}>Check our delivery coverage zones, rates, and minimum order requirements.</p>
       </div>
 
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: "2.5rem", alignItems: "start" }}>
@@ -144,12 +144,7 @@ export default function Delivery() {
               </p>
             </div>
 
-            <div style={{ borderLeft: "3px solid var(--color-secondary)", paddingLeft: "1rem" }}>
-              <h4 style={{ fontWeight: 700, color: "var(--text-main)", fontSize: "0.95rem" }}>Mail delivery</h4>
-              <p style={{ color: "var(--text-muted)", fontSize: "0.85rem", marginTop: "0.25rem" }}>
-                Mail delivery available with in Canada + delivery fee
-              </p>
-            </div>
+
           </div>
         </section>
 

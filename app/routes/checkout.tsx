@@ -7,18 +7,18 @@ import { getOrders, saveOrders } from "../data/db.client";
 export function meta({}: Route.MetaArgs) {
   return [
     { title: "Checkout | The Cann Flow - Finalize Order" },
-    { name: "description", content: "Complete your checkout and secure same-day cannabis delivery details. Pay Cash or e-Transfer upon arrival." },
-    { name: "keywords", content: "secure checkout, weed delivery checkout, cash on delivery weed, emt weed order" },
+    { name: "description", content: "Complete your checkout and secure same-day cannabis delivery details. Your information is safe and secure." },
+    { name: "keywords", content: "secure checkout, weed delivery checkout, cash on delivery weed" },
     { name: "robots", content: "noindex, follow" },
     { tagName: "link", rel: "canonical", href: "https://thecannflow.com/checkout" },
     { property: "og:type", content: "website" },
     { property: "og:title", content: "Checkout | The Cann Flow - Finalize Order" },
-    { property: "og:description", content: "Complete your checkout and secure same-day cannabis delivery details. Pay Cash or e-Transfer upon arrival." },
+    { property: "og:description", content: "Complete your checkout and secure same-day cannabis delivery details. Your information is safe and secure." },
     { property: "og:url", content: "https://thecannflow.com/checkout" },
     { property: "og:image", content: "https://thecannflow.com/favicon.svg" },
     { name: "twitter:card", content: "summary" },
     { name: "twitter:title", content: "Secure Order Checkout | The Cann Flow" },
-    { name: "twitter:description", content: "Review items in basket and submit order details for same-day GTA delivery or mail order." }
+    { name: "twitter:description", content: "Review items in basket and submit order details for same-day GTA delivery." }
   ];
 }
 
@@ -47,7 +47,7 @@ export default function Checkout() {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
-  const [zone, setZone] = useState<"north-york" | "gta" | "mail">("north-york");
+  const [zone, setZone] = useState<"north-york" | "gta">("north-york");
   const [referralCode, setReferralCode] = useState("");
   const [paymentMethod, setPaymentMethod] = useState("Cash on Delivery");
   
@@ -60,7 +60,6 @@ export default function Checkout() {
   // Calculate Delivery Fee & Thresholds
   // North York: free delivery above 50, else 5 fee
   // GTA: free delivery above 60, else 10 fee
-  // Mail Order (Canada): flat 15 fee
   const getDeliveryDetails = () => {
     switch (zone) {
       case "north-york":
@@ -74,12 +73,6 @@ export default function Checkout() {
           fee: cartCalcs.subtotal >= 60 ? 0 : 10.0,
           freeThreshold: 60,
           name: "GTA Delivery"
-        };
-      case "mail":
-        return {
-          fee: 15.0,
-          freeThreshold: null,
-          name: "Mail Order (Canada-wide)"
         };
     }
   };
@@ -109,7 +102,7 @@ export default function Checkout() {
       return;
     }
 
-    if (zone !== "mail" && !address.trim()) {
+    if (!address.trim()) {
       showNotification("Please provide a Delivery Address", "error");
       return;
     }
@@ -120,7 +113,7 @@ export default function Checkout() {
       orderId,
       name: name.trim(),
       phone: phone.trim(),
-      address: zone === "mail" ? address.trim() || "Mail Order (Canada)" : address.trim(),
+      address: address.trim(),
       zone: delivery.name,
       items: cart.map(item => {
         let priceFactor = 1;
@@ -162,7 +155,7 @@ export default function Checkout() {
             "form-name": "checkout-order",
             name: name,
             phone: phone,
-            address: address || "Mail Order",
+            address: address,
             zone: delivery.name,
             paymentMethod: paymentMethod,
             orderDetails: orderSummaryText,
@@ -317,7 +310,11 @@ Please confirm my delivery, thank you!`;
     <div className="container-custom" style={{ marginTop: "2rem" }}>
       
       <h1 style={{ fontSize: "2.2rem", fontFamily: "var(--font-heading)", fontWeight: 800, marginBottom: "0.5rem" }}>CHECKOUT</h1>
-      <p style={{ color: "var(--text-muted)", marginBottom: "2rem" }}>Secure your order details. Pay cash or e-Transfer upon arrival. No online fees.</p>
+      <div style={{ marginBottom: "2rem" }}>
+        <h2 style={{ fontSize: "1.2rem", color: "var(--text-main)", fontWeight: 700, marginBottom: "0.25rem" }}>Secure Your Details</h2>
+        <p style={{ color: "var(--text-muted)", fontSize: "0.95rem", marginBottom: "0.5rem" }}>Your information is safe and secure.</p>
+        <p style={{ color: "var(--color-primary)", fontWeight: 600, fontSize: "0.95rem" }}>Enjoy & Have a Wonderful Day! 🌿</p>
+      </div>
 
       {cart.length === 0 ? (
         <div className="glass-panel" style={{ padding: "4rem 2rem", textAlign: "center", color: "var(--text-muted)" }}>
@@ -389,41 +386,22 @@ Please confirm my delivery, thank you!`;
                   <div className="zone-card-title">GTA</div>
                   <div className="zone-card-info">Free on 60+<br />Else 5-20 fee</div>
                 </div>
-                <div 
-                  className={`zone-card ${zone === "mail" ? "selected" : ""}`}
-                  onClick={() => setZone("mail")}
-                >
-                  <div className="zone-card-title">Mail Order</div>
-                  <div className="zone-card-info">Canada-wide<br />Flat 15.00 fee</div>
-                </div>
               </div>
             </div>
 
             <div className="form-group">
-              <label className="form-label">{zone === "mail" ? "Mailing Address (Canada)" : "Delivery Address"}</label>
+              <label className="form-label">Delivery Address</label>
               <textarea
                 className="form-textarea"
                 rows={3}
-                placeholder={zone === "mail" ? "Unit/Apt, Street address, City, Province, Postal Code" : "Apt/Suite, street address, intersection details..."}
+                placeholder="Apt/Suite, street address, intersection details..."
                 required
                 value={address}
                 onChange={(e) => setAddress(e.target.value)}
               />
             </div>
 
-            <div className="form-group">
-              <label className="form-label">Payment Method</label>
-              <select 
-                className="form-select"
-                value={paymentMethod}
-                onChange={(e) => setPaymentMethod(e.target.value)}
-              >
-                <option value="Cash on Delivery">Cash on Delivery / Drop</option>
-                <option value="Interac e-Transfer">Interac e-Transfer (EMT)</option>
-              </select>
-            </div>
-
-            {zone !== "mail" && delivery.freeThreshold && cartCalcs.subtotal < delivery.freeThreshold && (
+            {delivery.freeThreshold && cartCalcs.subtotal < delivery.freeThreshold && (
               <div style={{ background: "rgba(245,158,11,0.08)", border: "1px solid var(--color-accent-gold)", padding: "1rem", borderRadius: "8px", color: "var(--color-accent-gold)", fontSize: "0.85rem", marginBottom: "1.5rem" }}>
                 Notice: You are {(delivery.freeThreshold - cartCalcs.subtotal).toFixed(2)} away from qualifying for free delivery! Add more items to waive the {delivery.fee.toFixed(2)} delivery fee.
               </div>
