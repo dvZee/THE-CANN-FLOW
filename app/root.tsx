@@ -209,9 +209,8 @@ function AppContent() {
           {/* Site Header */}
           <header className="site-header">
             <div className="container-custom nav-wrapper">
-              <NavLink to="/" className="logo-link">
-                <img src="/logo.png" alt="The Cann Flow Logo" style={{ width: "42px", height: "42px", objectFit: "contain" }} />
-                <span>THE CANN FLOW</span>
+              <NavLink to="/" className="logo-link" aria-label="The Cann Flow Home">
+                <img src="/logo.png" alt="The Cann Flow Logo" style={{ width: "54px", height: "54px", objectFit: "contain" }} />
               </NavLink>
 
               <ul className="nav-menu">
@@ -238,6 +237,20 @@ function AppContent() {
               </ul>
 
               <div className="nav-actions">
+                <div className="header-social-links hide-on-mobile">
+                  <a href="https://www.instagram.com/thecannflow/" target="_blank" rel="noopener noreferrer" className="header-social-link" aria-label="Instagram">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
+                      <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+                      <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+                      <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
+                    </svg>
+                  </a>
+                  <a href="https://www.facebook.com/thecannflow/" target="_blank" rel="noopener noreferrer" className="header-social-link" aria-label="Facebook">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
+                      <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
+                    </svg>
+                  </a>
+                </div>
                 <span className={`badge-status ${isStoreOpen ? "open" : "closed"} hide-on-mobile`}>
                   {isStoreOpen ? "OPEN NOW" : `CLOSED - OPENS ${nextOpeningTime}`}
                 </span>
@@ -266,7 +279,7 @@ function AppContent() {
                 <NavLink to="/delivery" className="mobile-nav-item" onClick={() => setIsMobileMenuOpen(false)} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
                   <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 011-1v-4h3l3.293 3.293a1 1 0 01.171.344l.536 2.144a1 1 0 01-.97 1.242H13" />
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1-1v10a1 1 0 001 1h1m8-1a1 1 0 011-1v-4h3l3.293 3.293a1 1 0 01.171.344l.536 2.144a1 1 0 01-.97 1.242H13" />
                   </svg>
                   DELIVERY INFO
                 </NavLink>
@@ -281,6 +294,22 @@ function AppContent() {
                   <span className={`badge-status ${isStoreOpen ? "open" : "closed"}`}>
                     {isStoreOpen ? "OPEN NOW" : `CLOSED - OPENS ${nextOpeningTime}`}
                   </span>
+                </div>
+                <div className="mobile-social-links">
+                  <a href="https://www.instagram.com/thecannflow/" target="_blank" rel="noopener noreferrer" className="mobile-social-link">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
+                      <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+                      <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+                      <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
+                    </svg>
+                    <span>Instagram</span>
+                  </a>
+                  <a href="https://www.facebook.com/thecannflow/" target="_blank" rel="noopener noreferrer" className="mobile-social-link">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
+                      <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
+                    </svg>
+                    <span>Facebook</span>
+                  </a>
                 </div>
               </div>
             </div>
@@ -420,9 +449,23 @@ function AppContent() {
 
           {/* Footer Section */}
           <footer style={{ background: "var(--bg-surface-hover)", borderTop: "1px solid var(--border-color)", padding: "2rem 0", marginTop: "auto" }}>
-            <div className="container-custom" style={{ display: "flex", justifyContent: "space-between", flexWrap: "wrap", gap: "1rem", fontSize: "0.85rem", color: "var(--text-muted)" }}>
+            <div className="container-custom" style={{ display: "flex", justifyContent: "space-between", flexWrap: "wrap", gap: "1rem", fontSize: "0.85rem", color: "var(--text-muted)", alignItems: "center" }}>
               <span>&copy; {new Date().getFullYear()} thecannflow.com</span>
-              <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
+              <div style={{ display: "flex", gap: "1.5rem", alignItems: "center" }}>
+                <a href="https://www.instagram.com/thecannflow/" target="_blank" rel="noopener noreferrer" className="footer-social-link">
+                  <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
+                    <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+                    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+                    <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
+                  </svg>
+                  <span>Instagram</span>
+                </a>
+                <a href="https://www.facebook.com/thecannflow/" target="_blank" rel="noopener noreferrer" className="footer-social-link">
+                  <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
+                    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
+                  </svg>
+                  <span>Facebook</span>
+                </a>
                 <a 
                   href="#top" 
                   aria-label="Back to Top"
