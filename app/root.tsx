@@ -88,15 +88,6 @@ function AppContent() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Seed product catalog in localStorage if empty
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const stored = localStorage.getItem("thecannflow_products");
-      if (!stored) {
-        localStorage.setItem("thecannflow_products", JSON.stringify(INITIAL_PRODUCTS));
-      }
-    }
-  }, []);
 
   // Check Age Gate from sessionStorage
   useEffect(() => {

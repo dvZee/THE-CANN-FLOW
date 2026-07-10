@@ -26,15 +26,7 @@ export function getProducts(): Product[] {
     return INITIAL_PRODUCTS;
   }
   try {
-    const products: Product[] = JSON.parse(stored);
-    const storedIds = new Set(products.map(p => p.id));
-    const missingProducts = INITIAL_PRODUCTS.filter(p => !storedIds.has(p.id));
-    if (missingProducts.length > 0) {
-      const merged = [...products, ...missingProducts];
-      localStorage.setItem("tcf_products", JSON.stringify(merged));
-      return merged;
-    }
-    return products;
+    return JSON.parse(stored);
   } catch (e) {
     return INITIAL_PRODUCTS;
   }
