@@ -28,7 +28,7 @@ interface OrderSummary {
   phone: string;
   address: string;
   zone: string;
-  items: { name: string; qty: number; weight: string; price: number }[];
+  items: { name: string; qty: number; weight: string; variant?: string; price: number }[];
   subtotal: number;
   happyHourDiscount: number;
   loyaltyDiscount: number;
@@ -37,6 +37,7 @@ interface OrderSummary {
   total: number;
   paymentMethod: string;
   timestamp: string;
+  notes?: string;
 }
 
 export default function Checkout() {
@@ -50,6 +51,7 @@ export default function Checkout() {
   const [zone, setZone] = useState<"north-york" | "gta">("north-york");
   const [referralCode, setReferralCode] = useState("");
   const [paymentMethod, setPaymentMethod] = useState("Cash on Delivery");
+  const [notes, setNotes] = useState("");
   
   // Checkout submission states
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -125,6 +127,7 @@ export default function Checkout() {
           name: item.product.name,
           qty: item.quantity,
           weight: item.selectedWeight,
+          variant: item.selectedVariant,
           price: Number((item.product.price * priceFactor).toFixed(2))
         };
       }),
@@ -135,7 +138,8 @@ export default function Checkout() {
       deliveryFee: delivery.fee,
       total: finalTotal,
       paymentMethod,
-      timestamp: new Date().toLocaleString()
+      timestamp: new Date().toLocaleString(),
+      notes: notes.trim() || undefined
     };
 
     // Save locally
@@ -160,6 +164,7 @@ export default function Checkout() {
             paymentMethod: paymentMethod,
             orderDetails: orderSummaryText,
             total: finalTotal.toFixed(2),
+            notes: notes.trim(),
           }).toString(),
         });
       } catch (err) {
@@ -205,8 +210,10 @@ export default function Checkout() {
 
   const getSmsText = (order: OrderSummary) => {
     const itemsText = order.items
-      .map(item => `- ${item.name} (${item.weight}) x${item.qty}`)
+      .map(item => `- ${item.name} (${item.weight}${item.variant ? ` - ${item.variant}` : ""}) x${item.qty}`)
       .join("\n");
+
+    const notesSection = order.notes ? `\nNotes: ${order.notes}\n` : "";
 
     return `THE CANN FLOW ORDER: ${order.orderId}
 Name: ${order.name}
@@ -224,7 +231,7 @@ Loyalty: -${order.loyaltyDiscount.toFixed(2)}
 Referral: -${order.referralDiscount.toFixed(2)}
 Delivery: ${order.deliveryFee.toFixed(2)}
 Total: ${order.total.toFixed(2)}
-
+${notesSection}
 Please confirm my delivery, thank you!`;
   };
 
@@ -282,11 +289,16 @@ Please confirm my delivery, thank you!`;
               <div>Phone: {placedOrder.phone}</div>
               <div>Address: {placedOrder.address}</div>
               <div>Zone: {placedOrder.zone}</div>
+              {placedOrder.notes && (
+                <div style={{ marginTop: "0.5rem", padding: "0.75rem", background: "rgba(255,255,255,0.02)", borderLeft: "3px solid var(--color-primary)", borderRadius: "4px", fontSize: "0.85rem", color: "var(--text-main)" }}>
+                  <strong>Instructions/Notes:</strong> {placedOrder.notes}
+                </div>
+              )}
             </div>
 
             {placedOrder.items.map((item, idx) => (
               <div key={idx} style={{ display: "flex", justifyContent: "space-between", margin: "0.25rem 0", color: "var(--text-muted)" }}>
-                <span>{item.name} ({item.weight}) x{item.qty}</span>
+                <span>{item.name} ({item.weight}{item.variant ? ` - ${item.variant}` : ""}) x{item.qty}</span>
                 <span>{item.price.toFixed(2)}</span>
               </div>
             ))}
@@ -341,7 +353,8 @@ Please confirm my delivery, thank you!`;
             <input type="hidden" name="zone" value={zone} />
             <input type="hidden" name="paymentMethod" value={paymentMethod} />
             <input type="hidden" name="total" value={finalTotal.toFixed(2)} />
-            <input type="hidden" name="orderDetails" value={cart.map(item => `${item.product.name} (${item.selectedWeight}) x${item.quantity}`).join(", ")} />
+            <input type="hidden" name="orderDetails" value={cart.map(item => `${item.product.name} (${item.selectedWeight}${item.selectedVariant ? ` - ${item.selectedVariant}` : ""}) x${item.quantity}`).join(", ")} />
+            <input type="hidden" name="notes" value={notes} />
             
             <h2 style={{ fontSize: "1.35rem", fontWeight: 700, borderBottom: "1px solid var(--border-color)", paddingBottom: "1rem", marginBottom: "1.5rem" }}>DELIVERY INFORMATION</h2>
             
@@ -398,6 +411,18 @@ Please confirm my delivery, thank you!`;
                 required
                 value={address}
                 onChange={(e) => setAddress(e.target.value)}
+              />
+            </div>
+
+            <div className="form-group">
+              <label className="form-label">Order Notes / Special Instructions (Optional)</label>
+              <textarea
+                name="notes"
+                className="form-textarea"
+                rows={3}
+                placeholder="e.g. Leave package on front porch, request flavor substitutions, or provide any details you need..."
+                value={notes}
+                onChange={(e) => setNotes(e.target.value)}
               />
             </div>
 
@@ -460,7 +485,12 @@ Please confirm my delivery, thank you!`;
                     <div key={idx} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: "0.9rem" }}>
                       <div>
                         <div style={{ color: "var(--text-main)", fontWeight: 500 }}>{item.product.name}</div>
-                        <div style={{ color: "var(--text-muted)", fontSize: "0.75rem" }}>Qty {item.quantity} &bull; {item.selectedWeight}</div>
+                        <div style={{ color: "var(--text-muted)", fontSize: "0.75rem" }}>
+                          Qty {item.quantity} &bull; {item.selectedWeight}
+                          {item.selectedVariant && (
+                            <> &bull; <span style={{ color: "var(--color-primary)", fontWeight: "600" }}>{item.selectedVariant}</span></>
+                          )}
+                        </div>
                       </div>
                       <span style={{ fontFamily: "var(--font-heading)", fontWeight: 600 }}>{itemTotal.toFixed(2)}</span>
                     </div>

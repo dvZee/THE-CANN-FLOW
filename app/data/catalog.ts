@@ -13,6 +13,7 @@ export interface Product {
   isFeatured: boolean;
   weight: string;
   weights?: string[]; // Multiple weights available
+  variants?: string[]; // Custom options/variants/flavors
 }
 
 export const INITIAL_PRODUCTS: Product[] = [

@@ -364,22 +364,25 @@ function AppContent() {
                   const itemTotal = Number((itemPrice * item.quantity).toFixed(2));
 
                   return (
-                    <div key={`${item.product.id}-${item.selectedWeight}-${idx}`} className="cart-item">
+                    <div key={`${item.product.id}-${item.selectedWeight}-${item.selectedVariant || ""}-${idx}`} className="cart-item">
                       <img src={item.product.image} alt={item.product.name} className="cart-item-img" />
                       <div className="cart-item-details">
                         <div className="cart-item-name">{item.product.name}</div>
                         <div className="cart-item-meta">
                           {item.product.brand} &bull; {item.selectedWeight}
+                          {item.selectedVariant && (
+                            <> &bull; <span style={{ color: "var(--color-primary)", fontWeight: "600" }}>{item.selectedVariant}</span></>
+                          )}
                         </div>
                         <div className="cart-item-qty-row">
-                          <button className="qty-btn" onClick={() => updateQuantity(item.product.id, item.selectedWeight, item.quantity - 1)}>-</button>
+                          <button className="qty-btn" onClick={() => updateQuantity(item.product.id, item.selectedWeight, item.selectedVariant, item.quantity - 1)}>-</button>
                           <span className="qty-val">{item.quantity}</span>
-                          <button className="qty-btn" onClick={() => updateQuantity(item.product.id, item.selectedWeight, item.quantity + 1)}>+</button>
+                          <button className="qty-btn" onClick={() => updateQuantity(item.product.id, item.selectedWeight, item.selectedVariant, item.quantity + 1)}>+</button>
                         </div>
                       </div>
                       <div className="cart-item-price-box">
                         <div className="cart-item-price">{itemTotal.toFixed(2)}</div>
-                        <button className="cart-item-remove" onClick={() => removeFromCart(item.product.id, item.selectedWeight)}>Remove</button>
+                        <button className="cart-item-remove" onClick={() => removeFromCart(item.product.id, item.selectedWeight, item.selectedVariant)}>Remove</button>
                       </div>
                     </div>
                   );

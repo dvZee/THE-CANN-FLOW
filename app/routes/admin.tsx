@@ -203,6 +203,7 @@ export default function Admin() {
   const [prodIsFeatured, setProdIsFeatured] = useState(false);
   const [prodWeight, setProdWeight] = useState("7g");
   const [prodWeightsText, setProdWeightsText] = useState("3.5g, 7g, 14g, 28g");
+  const [prodVariantsText, setProdVariantsText] = useState("");
 
   // Handle action response
   useEffect(() => {
@@ -274,6 +275,7 @@ export default function Admin() {
     setProdIsFeatured(false);
     setProdWeight("7g");
     setProdWeightsText("3.5g, 7g, 14g, 28g");
+    setProdVariantsText("");
     setIsModalOpen(true);
   };
 
@@ -292,6 +294,7 @@ export default function Admin() {
     setProdIsFeatured(product.isFeatured);
     setProdWeight(product.weight);
     setProdWeightsText(product.weights ? product.weights.join(", ") : "");
+    setProdVariantsText(product.variants ? product.variants.join(", ") : "");
     setIsModalOpen(true);
   };
 
@@ -318,6 +321,12 @@ export default function Admin() {
       .map(w => w.trim())
       .filter(w => w.length > 0);
 
+    // Split variants list
+    const variantsList = prodVariantsText
+      .split(",")
+      .map(v => v.trim())
+      .filter(v => v.length > 0);
+
     const productPayload = {
       id: editingProduct ? editingProduct.id : undefined,
       name: prodName.trim(),
@@ -331,7 +340,8 @@ export default function Admin() {
       imageBase64: prodImageBase64,
       isFeatured: prodIsFeatured,
       weight: prodWeight.trim(),
-      weights: weightsList.length > 0 ? weightsList : [prodWeight.trim()]
+      weights: weightsList.length > 0 ? weightsList : [prodWeight.trim()],
+      variants: variantsList.length > 0 ? variantsList : undefined
     };
 
     triggerServerAction(editingProduct ? "EDIT_PRODUCT" : "ADD_PRODUCT", productPayload);
@@ -681,6 +691,18 @@ export default function Admin() {
                   onChange={(e) => setProdWeightsText(e.target.value)}
                 />
                 <span style={{ fontSize: "0.75rem", color: "var(--text-muted)" }}>If specified, customers can toggle weights. Pricing scales by weight.</span>
+              </div>
+
+              <div className="form-group">
+                <label className="form-label">Available Options / Flavors (Comma separated)</label>
+                <input
+                  type="text"
+                  className="form-input"
+                  placeholder="e.g. Blueberry Kush, Mango Sativa, 3.5g Indica"
+                  value={prodVariantsText}
+                  onChange={(e) => setProdVariantsText(e.target.value)}
+                />
+                <span style={{ fontSize: "0.75rem", color: "var(--text-muted)" }}>If specified, customers must select one of these options when checking out.</span>
               </div>
 
               <div className="form-group">

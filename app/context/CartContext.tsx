@@ -5,13 +5,14 @@ export interface CartItem {
   product: Product;
   quantity: number;
   selectedWeight: string;
+  selectedVariant?: string;
 }
 
 interface CartContextType {
   cart: CartItem[];
-  addToCart: (product: Product, quantity: number, weight: string) => void;
-  removeFromCart: (productId: string, weight: string) => void;
-  updateQuantity: (productId: string, weight: string, quantity: number) => void;
+  addToCart: (product: Product, quantity: number, weight: string, variant?: string) => void;
+  removeFromCart: (productId: string, weight: string, variant?: string) => void;
+  updateQuantity: (productId: string, weight: string, variant: string | undefined, quantity: number) => void;
   clearCart: () => void;
   isCartOpen: boolean;
   setIsCartOpen: (open: boolean) => void;
@@ -122,38 +123,54 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     localStorage.setItem("thecannflow_cart", JSON.stringify(newCart));
   };
 
-  const addToCart = (product: Product, quantity: number, weight: string) => {
+  const addToCart = (product: Product, quantity: number, weight: string, variant?: string) => {
     const existingIndex = cart.findIndex(
-      (item) => item.product.id === product.id && item.selectedWeight === weight
+      (item) =>
+        item.product.id === product.id &&
+        item.selectedWeight === weight &&
+        item.selectedVariant === variant
     );
 
     let newCart = [...cart];
     if (existingIndex > -1) {
       newCart[existingIndex].quantity += quantity;
     } else {
-      newCart.push({ product, quantity, selectedWeight: weight });
+      newCart.push({ product, quantity, selectedWeight: weight, selectedVariant: variant });
     }
-    
+
     saveCart(newCart);
-    showNotification(`Added ${quantity}x ${product.name} (${weight}) to cart`);
+    const details = [weight, variant].filter(Boolean).join(" - ");
+    showNotification(`Added ${quantity}x ${product.name} (${details}) to cart`);
   };
 
-  const removeFromCart = (productId: string, weight: string) => {
+  const removeFromCart = (productId: string, weight: string, variant?: string) => {
     const newCart = cart.filter(
-      (item) => !(item.product.id === productId && item.selectedWeight === weight)
+      (item) =>
+        !(item.product.id === productId &&
+          item.selectedWeight === weight &&
+          item.selectedVariant === variant)
     );
     saveCart(newCart);
     showNotification("Item removed from cart", "info");
   };
 
-  const updateQuantity = (productId: string, weight: string, quantity: number) => {
+  const updateQuantity = (
+    productId: string,
+    weight: string,
+    variant: string | undefined,
+    quantity: number
+  ) => {
     if (quantity <= 0) {
-      removeFromCart(productId, weight);
+      removeFromCart(productId, weight, variant);
       return;
     }
 
     const newCart = cart.map((item) => {
-      if (item.product.id === productId && item.selectedWeight === weight) {
+      if (
+        item.product.id === productId &&
+        item.selectedWeight === weight &&
+        item.selectedVariant === variant
+      ) {
         return { ...item, quantity };
       }
       return item;

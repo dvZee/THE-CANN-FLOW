@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { Product } from "../data/catalog";
-import { useCart } from "../context/CartContext";
+import { useCart, useNotifications } from "../context/CartContext";
 
 interface ProductCardProps {
   product: Product;
@@ -8,7 +8,9 @@ interface ProductCardProps {
 
 export function ProductCard({ product }: ProductCardProps) {
   const { addToCart } = useCart();
+  const { showNotification } = useNotifications();
   const [selectedWeight, setSelectedWeight] = useState(product.weight);
+  const [selectedVariant, setSelectedVariant] = useState<string>("");
   const [isDetailOpen, setIsDetailOpen] = useState(false);
   const [qty, setQty] = useState(1);
 
@@ -38,7 +40,13 @@ export function ProductCard({ product }: ProductCardProps) {
 
   const handleAddToCart = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
-    addToCart(product, 1, selectedWeight);
+    if (product.variants && product.variants.length > 0 && !selectedVariant) {
+      setIsDetailOpen(true);
+      setQty(1);
+      showNotification("Please select a variant/flavor option", "warning");
+    } else {
+      addToCart(product, 1, selectedWeight, selectedVariant || undefined);
+    }
   };
 
   const getCategoryClass = (cat: string) => {
@@ -159,6 +167,38 @@ export function ProductCard({ product }: ProductCardProps) {
                 <div className="product-detail-desc-title">Description</div>
                 <p className="product-detail-desc">{product.description || "No description available for this product."}</p>
 
+                {/* Variant / Option Selector */}
+                {product.variants && product.variants.length > 0 && (
+                  <div style={{ margin: "1rem 0" }}>
+                    <label className="form-label" style={{ fontSize: "0.8rem", fontWeight: 700, color: "var(--text-muted)", marginBottom: "0.5rem", display: "block", textTransform: "uppercase" }}>
+                      Select Option / Flavor *
+                    </label>
+                    <select
+                      className="form-select"
+                      value={selectedVariant}
+                      onChange={(e) => setSelectedVariant(e.target.value)}
+                      style={{
+                        width: "100%",
+                        padding: "0.6rem 1rem",
+                        borderRadius: "var(--radius-sm)",
+                        background: "var(--bg-input)",
+                        border: "1px solid var(--border-color)",
+                        color: "var(--text-main)",
+                        fontSize: "0.95rem",
+                        fontWeight: 500,
+                        cursor: "pointer"
+                      }}
+                    >
+                      <option value="">-- Choose Option --</option>
+                      {product.variants.map((v) => (
+                        <option key={v} value={v}>
+                          {v}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                )}
+
                 {/* Weight selector */}
                 {product.weights && product.weights.length > 0 && (
                   <div style={{ margin: "1rem 0 1.5rem" }}>
@@ -197,10 +237,14 @@ export function ProductCard({ product }: ProductCardProps) {
                   <button 
                     className="cart-checkout-btn" 
                     onClick={() => {
-                      addToCart(product, qty, selectedWeight);
+                      if (product.variants && product.variants.length > 0 && !selectedVariant) {
+                        showNotification("Please select an option/flavor first", "error");
+                        return;
+                      }
+                      addToCart(product, qty, selectedWeight, selectedVariant || undefined);
                       setIsDetailOpen(false);
                     }}
-                    style={{ marginTop: 0, height: "42px", padding: "0 1.5rem", flex: 1, display: "flex", justifyContent: "space-between", alignItems: "center", fontWeight: "700" }}
+                    style={{ marginTop: 0, height: "42px", padding: "0 1.5rem", flex: 1, display: "flex", justifyContent: "space-between", alignItems: "center", fontWeight: "700", opacity: (product.variants && product.variants.length > 0 && !selectedVariant) ? 0.6 : 1 }}
                   >
                     <span>ADD TO BASKET</span>
                     <span>${(currentPrice * qty).toFixed(2)}</span>
