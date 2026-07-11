@@ -7,4 +7,5 @@ export default [
   route("delivery", "routes/delivery.tsx"),
   route("contact", "routes/contact.tsx"),
   route("admin", "routes/admin.tsx"),
+  route("product/:id", "routes/product.tsx"),
 ] satisfies RouteConfig;
