@@ -201,7 +201,7 @@ function AppContent() {
           <header className="site-header">
             <div className="container-custom nav-wrapper">
               <NavLink to="/" className="logo-link" aria-label="The Cann Flow Home">
-                <img src="/logo.png" alt="The Cann Flow Logo" style={{ width: "54px", height: "54px", objectFit: "contain" }} />
+                <img src="/logo.png" alt="The Cann Flow Logo" className="nav-logo" />
               </NavLink>
 
               <ul className="nav-menu">

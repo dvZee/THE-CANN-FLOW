@@ -136,6 +136,21 @@ button, input, select, textarea {
   letter-spacing: -0.03em;
 }
 
+.nav-logo {
+  height: 72px;
+  width: auto;
+  object-fit: contain;
+  transition: transform 0.2s ease;
+}
+.nav-logo:hover {
+  transform: scale(1.05);
+}
+@media (max-width: 768px) {
+  .nav-logo {
+    height: 56px;
+  }
+}
+
 .logo-icon {
   width: 32px;
   height: 32px;
@@ -1821,6 +1836,18 @@ button, input, select, textarea {
 }
 .product-card-body-link:hover .product-img {
   transform: scale(1.03);
+}
+
+.hero-slide.no-gradient {
+  background-color: #000000;
+  background-size: cover;
+}
+@media (max-width: 768px) {
+  .hero-slide.no-gradient {
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+  }
 }
 
 
