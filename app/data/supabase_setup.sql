@@ -42,6 +42,11 @@ CREATE TABLE IF NOT EXISTS public.orders (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );
 
+-- 2.5. Disable Row Level Security (RLS) on tables to allow client-side read/write via anon key.
+-- (If you wish to secure these tables later, you can enable RLS and add authentication-based policies).
+ALTER TABLE public.products DISABLE ROW LEVEL SECURITY;
+ALTER TABLE public.orders DISABLE ROW LEVEL SECURITY;
+
 -- 3. Create Public Storage Bucket for Product Images
 -- This sets up the 'product-images' bucket
 INSERT INTO storage.buckets (id, name, public)
