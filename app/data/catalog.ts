@@ -221,3 +221,15 @@ export const INITIAL_PRODUCTS: Product[] = [
     weights: ["1g"]
   }
 ];
+
+export const getWeightFactor = (weight: string): number => {
+  switch (weight) {
+    case "3.5g": return 0.55;
+    case "7g": return 1.0;
+    case "14g": return 1.8;
+    case "28g": return 3.2;
+    case "0.5g": return 0.6;
+    case "1g": return 1.0;
+    default: return 1.0;
+  }
+};

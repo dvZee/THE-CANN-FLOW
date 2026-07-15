@@ -3,6 +3,7 @@ import type { Route } from "./+types/checkout";
 import { useCart, useNotifications } from "../context/CartContext";
 import { NavLink } from "react-router";
 import { saveOrder } from "../data/db.client";
+import { getWeightFactor } from "../data/catalog";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -118,10 +119,7 @@ export default function Checkout() {
       address: address.trim(),
       zone: delivery.name,
       items: cart.map(item => {
-        let priceFactor = 1;
-        if (item.selectedWeight === "14g") priceFactor = 1.8;
-        if (item.selectedWeight === "28g") priceFactor = 3.2;
-        if (item.selectedWeight === "3.5g") priceFactor = 0.55;
+        const priceFactor = getWeightFactor(item.selectedWeight);
         
         return {
           name: item.product.name,
@@ -470,11 +468,8 @@ Please confirm my delivery, thank you!`;
               <h3 style={{ fontSize: "1.1rem", fontWeight: 700, borderBottom: "1px solid var(--border-color)", paddingBottom: "0.75rem", marginBottom: "1rem" }}>ORDER SUMMARY</h3>
               
               <div style={{ maxHeight: "250px", overflowY: "auto", display: "grid", gap: "0.75rem", borderBottom: "1px solid var(--border-color)", paddingBottom: "1rem", marginBottom: "1rem" }}>
-                {cart.map((item, idx) => {
-                  let priceFactor = 1;
-                  if (item.selectedWeight === "14g") priceFactor = 1.8;
-                  if (item.selectedWeight === "28g") priceFactor = 3.2;
-                  if (item.selectedWeight === "3.5g") priceFactor = 0.55;
+               {cart.map((item, idx) => {
+                  const priceFactor = getWeightFactor(item.selectedWeight);
                   
                   const itemPrice = item.product.price * priceFactor;
                   const itemTotal = itemPrice * item.quantity;

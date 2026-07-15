@@ -1,7 +1,7 @@
 import { useState } from "react";
 import type { Route } from "./+types/product";
 import { getProducts } from "../data/db.client";
-import type { Product } from "../data/catalog";
+import { type Product, getWeightFactor } from "../data/catalog";
 import { useCart, useNotifications } from "../context/CartContext";
 import { NavLink } from "react-router";
 
@@ -35,18 +35,6 @@ export default function ProductDetail({ loaderData }: Route.ComponentProps) {
   const [selectedWeight, setSelectedWeight] = useState(product.weight);
   const [selectedVariant, setSelectedVariant] = useState<string>("");
   const [qty, setQty] = useState(1);
-
-  const getWeightFactor = (weight: string) => {
-    switch (weight) {
-      case "3.5g": return 0.55;
-      case "7g": return 1.0;
-      case "14g": return 1.8;
-      case "28g": return 3.2;
-      case "0.5g": return 0.6;
-      case "1g": return 1.0;
-      default: return 1.0;
-    }
-  };
 
   const factor = getWeightFactor(selectedWeight);
   const currentPrice = Number((product.price * factor).toFixed(2));

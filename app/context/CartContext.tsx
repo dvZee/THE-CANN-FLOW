@@ -1,5 +1,5 @@
 import React, { useState, useEffect, createContext, useContext } from "react";
-import { type Product } from "../data/catalog";
+import { type Product, getWeightFactor } from "../data/catalog";
 
 export interface CartItem {
   product: Product;
@@ -200,11 +200,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   const getCartCalculations = () => {
     const subtotal = cart.reduce((acc, item) => {
-      let priceFactor = 1;
-      if (item.selectedWeight === "14g") priceFactor = 1.8;
-      if (item.selectedWeight === "28g") priceFactor = 3.2;
-      if (item.selectedWeight === "3.5g") priceFactor = 0.55;
-      
+      const priceFactor = getWeightFactor(item.selectedWeight);
       const itemPrice = item.product.price * priceFactor;
       return acc + (itemPrice * item.quantity);
     }, 0);

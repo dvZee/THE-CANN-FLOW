@@ -10,7 +10,7 @@ import {
 import { useState, useEffect } from "react";
 import type { Route } from "./+types/root";
 import "./app.css";
-import { INITIAL_PRODUCTS } from "./data/catalog";
+import { INITIAL_PRODUCTS, getWeightFactor } from "./data/catalog";
 import { CartProvider, NotificationProvider, useCart, useNotifications } from "./context/CartContext";
 
 export const links: Route.LinksFunction = () => [
@@ -355,10 +355,7 @@ function AppContent() {
                 </div>
               ) : (
                 cart.map((item, idx) => {
-                  let priceFactor = 1;
-                  if (item.selectedWeight === "14g") priceFactor = 1.8;
-                  if (item.selectedWeight === "28g") priceFactor = 3.2;
-                  if (item.selectedWeight === "3.5g") priceFactor = 0.55;
+                  const priceFactor = getWeightFactor(item.selectedWeight);
                   
                   const itemPrice = Number((item.product.price * priceFactor).toFixed(2));
                   const itemTotal = Number((itemPrice * item.quantity).toFixed(2));
