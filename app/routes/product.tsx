@@ -1,15 +1,15 @@
 import { useState } from "react";
 import type { Route } from "./+types/product";
 import { getProducts } from "../data/db.client";
+import type { Product } from "../data/catalog";
 import { useCart, useNotifications } from "../context/CartContext";
 import { NavLink } from "react-router";
 
-export function meta({ params }: Route.MetaArgs) {
-  const products = getProducts();
-  const product = products.find((p) => p.id === params.id);
-  if (!product) {
+export function meta({ data }: { data?: { product: Product } }) {
+  if (!data || !data.product) {
     return [{ title: "Product Not Found | The Cann Flow" }];
   }
+  const { product } = data;
   return [
     { title: `${product.name} | ${product.brand} - The Cann Flow` },
     { name: "description", content: `${product.name} by ${product.brand}. THC: ${product.thc}. Category: ${product.category}. ${product.description}` },
@@ -18,8 +18,8 @@ export function meta({ params }: Route.MetaArgs) {
   ];
 }
 
-export function clientLoader({ params }: Route.ClientLoaderArgs) {
-  const products = getProducts();
+export async function clientLoader({ params }: Route.ClientLoaderArgs) {
+  const products = await getProducts();
   const product = products.find((p) => p.id === params.id);
   if (!product) {
     throw new Response("Product Not Found", { status: 404 });

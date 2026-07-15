@@ -25,8 +25,8 @@ export function meta({}: Route.MetaArgs) {
   ];
 }
 
-export function clientLoader() {
-  const products = getProducts();
+export async function clientLoader() {
+  const products = await getProducts();
   return { products };
 }
 

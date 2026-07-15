@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import type { Route } from "./+types/admin";
 import { useNotifications } from "../context/CartContext";
 import { type Product } from "../data/catalog";
-import { getProducts, saveProducts, getOrders, saveOrders, saveUploadedImage, type OrderSummary } from "../data/db.client";
+import { getProducts, getOrders, saveUploadedImage, addProduct, editProduct, toggleFeaturedProduct, deleteProduct, updateOrderStatus, deleteOrder, clearOrders, type OrderSummary } from "../data/db.client";
 import { useLoaderData, useSubmit, useActionData } from "react-router";
 
 export function meta({}: Route.MetaArgs) {
@@ -24,8 +24,8 @@ export async function clientLoader() {
     return { isAuthorized: false, products: [] as Product[], orders: [] as OrderSummary[] };
   }
 
-  const products = getProducts();
-  const orders = getOrders();
+  const products = await getProducts();
+  const orders = await getOrders();
   return { isAuthorized: true, products, orders };
 }
 
@@ -62,15 +62,13 @@ export async function clientAction({ request }: Route.ClientActionArgs) {
     }
 
     if (type === "ADD_PRODUCT") {
-      const products = getProducts();
       let imageUrl = payload.image || "https://images.unsplash.com/photo-1603909223429-69bb7101f420?w=400&q=80";
       
       if (payload.imageBase64) {
-        imageUrl = saveUploadedImage(payload.imageBase64);
+        imageUrl = await saveUploadedImage(payload.imageBase64);
       }
       
-      const newProduct: Product = {
-        id: `custom-${Math.random().toString(36).substring(2, 9)}`,
+      const newProduct: Omit<Product, "id"> = {
         name: payload.name,
         brand: payload.brand,
         description: payload.description,
@@ -83,86 +81,69 @@ export async function clientAction({ request }: Route.ClientActionArgs) {
         image: imageUrl,
         isFeatured: payload.isFeatured,
         weight: payload.weight,
-        weights: payload.weights
+        weights: payload.weights,
+        variants: payload.variants
       };
 
-      products.push(newProduct);
-      saveProducts(products);
+      await addProduct(newProduct);
       return { success: true, message: "Product added successfully" };
     }
 
     if (type === "EDIT_PRODUCT") {
-      const products = getProducts();
       let imageUrl = payload.image;
       
       if (payload.imageBase64) {
-        imageUrl = saveUploadedImage(payload.imageBase64);
+        imageUrl = await saveUploadedImage(payload.imageBase64);
       }
 
-      const updatedProducts = products.map(p => {
-        if (p.id === payload.id) {
-          return {
-            ...p,
-            name: payload.name,
-            brand: payload.brand,
-            description: payload.description,
-            category: payload.category,
-            price: payload.price,
-            originalPrice: payload.originalPrice,
-            thc: payload.thc,
-            image: imageUrl,
-            isFeatured: payload.isFeatured,
-            weight: payload.weight,
-            weights: payload.weights
-          };
-        }
-        return p;
-      });
+      const updatedProduct: Product = {
+        id: payload.id,
+        name: payload.name,
+        brand: payload.brand,
+        description: payload.description,
+        category: payload.category,
+        price: payload.price,
+        originalPrice: payload.originalPrice,
+        thc: payload.thc,
+        rating: payload.rating || 5.0,
+        reviewsCount: payload.reviewsCount || 0,
+        image: imageUrl,
+        isFeatured: payload.isFeatured,
+        weight: payload.weight,
+        weights: payload.weights,
+        variants: payload.variants
+      };
 
-      saveProducts(updatedProducts);
+      await editProduct(updatedProduct);
       return { success: true, message: "Product updated successfully" };
     }
 
     if (type === "DELETE_PRODUCT") {
-      const products = getProducts();
-      const updatedProducts = products.filter(p => p.id !== payload.id);
-      saveProducts(updatedProducts);
+      await deleteProduct(payload.id);
       return { success: true, message: "Product deleted successfully" };
     }
 
     if (type === "TOGGLE_FEATURED") {
-      const products = getProducts();
-      const updatedProducts = products.map(p => {
-        if (p.id === payload.id) {
-          return { ...p, isFeatured: !p.isFeatured };
-        }
-        return p;
-      });
-      saveProducts(updatedProducts);
+      const products = await getProducts();
+      const product = products.find(p => p.id === payload.id);
+      if (product) {
+        await toggleFeaturedProduct(payload.id, !product.isFeatured);
+      }
       return { success: true, message: "Product featured status updated" };
     }
 
     if (type === "UPDATE_ORDER_STATUS") {
-      const orders = getOrders();
-      const updatedOrders = orders.map(o => {
-        if (o.orderId === payload.orderId) {
-          return { ...o, status: payload.status };
-        }
-        return o;
-      });
-      saveOrders(updatedOrders);
+      await updateOrderStatus(payload.orderId, payload.status);
       return { success: true, message: "Order status updated" };
     }
 
     if (type === "DELETE_ORDER") {
-      const orders = getOrders();
-      const updatedOrders = orders.filter(o => o.orderId !== payload.orderId);
-      saveOrders(updatedOrders);
+      await deleteOrder(payload.orderId);
       return { success: true, message: "Order deleted successfully" };
     }
 
     if (type === "CLEAR_ORDERS") {
-      saveOrders([]);
+      await clearOrders();
       return { success: true, message: "All orders cleared" };
     }
 

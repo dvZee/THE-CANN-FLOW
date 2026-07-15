@@ -2,7 +2,7 @@ import { useState } from "react";
 import type { Route } from "./+types/checkout";
 import { useCart, useNotifications } from "../context/CartContext";
 import { NavLink } from "react-router";
-import { getOrders, saveOrders } from "../data/db.client";
+import { saveOrder } from "../data/db.client";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -142,11 +142,9 @@ export default function Checkout() {
       notes: notes.trim() || undefined
     };
 
-    // Save locally
+    // Save to Supabase
     try {
-      const orders = getOrders();
-      orders.unshift(newOrder);
-      saveOrders(orders);
+      await saveOrder(newOrder);
       
       const orderSummaryText = getSmsText(newOrder);
 
