@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import type { Route } from "./+types/admin";
 import { useNotifications } from "../context/CartContext";
 import { type Product } from "../data/catalog";
-import { getProducts, getOrders, saveUploadedImage, addProduct, editProduct, toggleFeaturedProduct, deleteProduct, updateOrderStatus, deleteOrder, clearOrders, type OrderSummary } from "../data/db.client";
+import { getProducts, getOrders, saveUploadedImage, addProduct, editProduct, toggleFeaturedProduct, deleteProduct, updateOrderStatus, deleteOrder, clearOrders, seedProducts, type OrderSummary } from "../data/db.client";
 import { useLoaderData, useSubmit, useActionData } from "react-router";
 
 export function meta({}: Route.MetaArgs) {
@@ -147,6 +147,11 @@ export async function clientAction({ request }: Route.ClientActionArgs) {
       return { success: true, message: "All orders cleared" };
     }
 
+    if (type === "SEED_PRODUCTS") {
+      await seedProducts();
+      return { success: true, message: "Default catalog seeded successfully" };
+    }
+
     return { success: false, error: "Invalid action type" };
   } catch (error) {
     console.error("Admin action error", error);
@@ -213,6 +218,14 @@ export default function Admin() {
       { type, payload: JSON.stringify(payload) },
       { method: "post", encType: "application/json" }
     );
+  };
+
+  // Seed Default Catalog
+  const handleSeedCatalog = () => {
+    if (confirm("Are you sure you want to seed the default products catalog into your Supabase database?")) {
+      triggerServerAction("SEED_PRODUCTS", {});
+      showNotification("Seeding products catalog...", "info");
+    }
   };
 
   // Toggle Featured Flag
@@ -442,38 +455,57 @@ export default function Admin() {
               </tr>
             </thead>
             <tbody>
-              {products.map(p => (
-                <tr key={p.id}>
-                  <td>
-                    <img src={p.image} alt={p.name} style={{ width: "40px", height: "40px", objectFit: "contain", background: "rgba(255,255,255,0.02)", borderRadius: "4px" }} />
-                  </td>
-                  <td>
-                    <div style={{ fontWeight: 600, color: "var(--text-main)" }}>{p.name}</div>
-                    <div style={{ fontSize: "0.75rem", color: "var(--text-muted)" }}>Weights: {p.weights?.join(", ")}</div>
-                  </td>
-                  <td style={{ fontSize: "0.9rem" }}>{p.brand}</td>
-                  <td>
-                    <span className="badge-status open" style={{ background: "rgba(255,255,255,0.05)", border: "1px solid var(--border-color)", color: "var(--text-main)" }}>{p.category}</span>
-                  </td>
-                  <td style={{ fontSize: "0.9rem" }}>{p.thc}</td>
-                  <td style={{ fontFamily: "var(--font-heading)", fontWeight: 700 }}>
-                    {p.price.toFixed(2)}
-                    {p.originalPrice && <span style={{ textDecoration: "line-through", color: "var(--text-muted)", fontSize: "0.75rem", marginLeft: "0.5rem" }}>{p.originalPrice.toFixed(2)}</span>}
-                  </td>
-                  <td>
-                    <input
-                      type="checkbox"
-                      checked={p.isFeatured}
-                      onChange={() => handleToggleFeatured(p.id)}
-                      style={{ transform: "scale(1.2)", cursor: "pointer", accentColor: "var(--color-primary)" }}
-                    />
-                  </td>
-                  <td style={{ textAlign: "right" }}>
-                    <button className="qty-btn" style={{ display: "inline-flex", width: "auto", padding: "0.25rem 0.75rem", marginRight: "0.5rem", fontSize: "0.8rem", borderRadius: "4px" }} onClick={() => openEditModal(p)}>Edit</button>
-                    <button className="qty-btn" style={{ display: "inline-flex", width: "auto", padding: "0.25rem 0.75rem", fontSize: "0.8rem", color: "var(--color-danger)", borderColor: "rgba(239,68,68,0.2)", borderRadius: "4px" }} onClick={() => handleDeleteProduct(p.id, p.name)}>Delete</button>
+              {products.length === 0 ? (
+                <tr>
+                  <td colSpan={8} style={{ textAlign: "center", padding: "4rem 1rem", color: "var(--text-muted)" }}>
+                    <svg style={{ width: "48px", height: "48px", opacity: 0.3, marginBottom: "1rem", display: "inline-block" }} fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z"/>
+                    </svg>
+                    <p style={{ marginBottom: "1.5rem" }}>Your Supabase products catalog is empty.</p>
+                    <div style={{ display: "flex", gap: "1rem", justifyContent: "center" }}>
+                      <button type="button" className="btn-age-verify" style={{ width: "auto", padding: "0.5rem 1.5rem" }} onClick={handleSeedCatalog}>
+                        SEED DEFAULT CATALOG
+                      </button>
+                      <button type="button" className="qty-btn" style={{ width: "auto", padding: "0.5rem 1.5rem" }} onClick={openAddModal}>
+                        + ADD NEW PRODUCT
+                      </button>
+                    </div>
                   </td>
                 </tr>
-              ))}
+              ) : (
+                products.map(p => (
+                  <tr key={p.id}>
+                    <td>
+                      <img src={p.image} alt={p.name} style={{ width: "40px", height: "40px", objectFit: "contain", background: "rgba(255,255,255,0.02)", borderRadius: "4px" }} />
+                    </td>
+                    <td>
+                      <div style={{ fontWeight: 600, color: "var(--text-main)" }}>{p.name}</div>
+                      <div style={{ fontSize: "0.75rem", color: "var(--text-muted)" }}>Weights: {p.weights?.join(", ")}</div>
+                    </td>
+                    <td style={{ fontSize: "0.9rem" }}>{p.brand}</td>
+                    <td>
+                      <span className="badge-status open" style={{ background: "rgba(255,255,255,0.05)", border: "1px solid var(--border-color)", color: "var(--text-main)" }}>{p.category}</span>
+                    </td>
+                    <td style={{ fontSize: "0.9rem" }}>{p.thc}</td>
+                    <td style={{ fontFamily: "var(--font-heading)", fontWeight: 700 }}>
+                      {p.price.toFixed(2)}
+                      {p.originalPrice && <span style={{ textDecoration: "line-through", color: "var(--text-muted)", fontSize: "0.75rem", marginLeft: "0.5rem" }}>{p.originalPrice.toFixed(2)}</span>}
+                    </td>
+                    <td>
+                      <input
+                        type="checkbox"
+                        checked={p.isFeatured}
+                        onChange={() => handleToggleFeatured(p.id)}
+                        style={{ transform: "scale(1.2)", cursor: "pointer", accentColor: "var(--color-primary)" }}
+                      />
+                    </td>
+                    <td style={{ textAlign: "right" }}>
+                      <button className="qty-btn" style={{ display: "inline-flex", width: "auto", padding: "0.25rem 0.75rem", marginRight: "0.5rem", fontSize: "0.8rem", borderRadius: "4px" }} onClick={() => openEditModal(p)}>Edit</button>
+                      <button className="qty-btn" style={{ display: "inline-flex", width: "auto", padding: "0.25rem 0.75rem", fontSize: "0.8rem", color: "var(--color-danger)", borderColor: "rgba(239,68,68,0.2)", borderRadius: "4px" }} onClick={() => handleDeleteProduct(p.id, p.name)}>Delete</button>
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>

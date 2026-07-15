@@ -20,7 +20,7 @@ export interface OrderSummary {
   notes?: string;
 }
 
-// 1. Fetch Products (Dynamic client load + Seeding if table is empty)
+// 1. Fetch Products (Directly from Supabase)
 export async function getProducts(): Promise<Product[]> {
   try {
     const { data, error } = await supabase
@@ -30,38 +30,10 @@ export async function getProducts(): Promise<Product[]> {
 
     if (error) {
       console.error("Error fetching products from Supabase", error);
-      return INITIAL_PRODUCTS;
+      return [];
     }
 
-    // Seed products table if empty
-    if (!data || data.length === 0) {
-      console.log("Supabase products table is empty. Seeding INITIAL_PRODUCTS...");
-      const seedData = INITIAL_PRODUCTS.map(p => ({
-        id: p.id,
-        name: p.name,
-        brand: p.brand,
-        description: p.description,
-        category: p.category,
-        price: p.price,
-        original_price: p.originalPrice || null,
-        thc: p.thc,
-        rating: p.rating,
-        reviews_count: p.reviewsCount,
-        image: p.image,
-        is_featured: p.isFeatured,
-        weight: p.weight,
-        weights: p.weights || [],
-        variants: p.variants || []
-      }));
-
-      const { error: seedError } = await supabase.from("products").insert(seedData);
-      if (seedError) {
-        console.error("Error seeding products to Supabase", seedError);
-      } else {
-        console.log("Seeding successful.");
-      }
-      return INITIAL_PRODUCTS;
-    }
+    if (!data) return [];
 
     return data.map((p: any) => ({
       id: p.id,
@@ -82,7 +54,34 @@ export async function getProducts(): Promise<Product[]> {
     }));
   } catch (err) {
     console.error("Unexpected error fetching products", err);
-    return INITIAL_PRODUCTS;
+    return [];
+  }
+}
+
+// 1.5. Seed default catalog manually
+export async function seedProducts(): Promise<void> {
+  const seedData = INITIAL_PRODUCTS.map(p => ({
+    id: p.id,
+    name: p.name,
+    brand: p.brand,
+    description: p.description,
+    category: p.category,
+    price: p.price,
+    original_price: p.originalPrice || null,
+    thc: p.thc,
+    rating: p.rating,
+    reviews_count: p.reviewsCount,
+    image: p.image,
+    is_featured: p.isFeatured,
+    weight: p.weight,
+    weights: p.weights || [],
+    variants: p.variants || []
+  }));
+
+  const { error } = await supabase.from("products").insert(seedData);
+  if (error) {
+    console.error("Error seeding products to Supabase", error);
+    throw error;
   }
 }
 
