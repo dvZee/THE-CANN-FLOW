@@ -355,7 +355,7 @@ function AppContent() {
                 </div>
               ) : (
                 cart.map((item, idx) => {
-                  const priceFactor = getWeightFactor(item.selectedWeight);
+                  const priceFactor = getWeightFactor(item.selectedWeight, item.product.category);
                   
                   const itemPrice = Number((item.product.price * priceFactor).toFixed(2));
                   const itemTotal = Number((itemPrice * item.quantity).toFixed(2));

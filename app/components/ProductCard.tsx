@@ -1,5 +1,5 @@
 import { useState } from "react";
-import type { Product } from "../data/catalog";
+import { type Product, getWeightFactor } from "../data/catalog";
 import { useCart } from "../context/CartContext";
 import { NavLink, useNavigate } from "react-router";
 
@@ -12,19 +12,7 @@ export function ProductCard({ product }: ProductCardProps) {
   const navigate = useNavigate();
   const [selectedWeight, setSelectedWeight] = useState(product.weight);
 
-  const getWeightFactor = (weight: string) => {
-    switch (weight) {
-      case "3.5g": return 0.55;
-      case "7g": return 1.0;
-      case "14g": return 1.8;
-      case "28g": return 3.2;
-      case "0.5g": return 0.6;
-      case "1g": return 1.0;
-      default: return 1.0;
-    }
-  };
-
-  const factor = getWeightFactor(selectedWeight);
+  const factor = getWeightFactor(selectedWeight, product.category);
   const currentPrice = Number((product.price * factor).toFixed(2));
   const originalPrice = product.originalPrice ? Number((product.originalPrice * factor).toFixed(2)) : undefined;
   

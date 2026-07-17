@@ -200,7 +200,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   const getCartCalculations = () => {
     const subtotal = cart.reduce((acc, item) => {
-      const priceFactor = getWeightFactor(item.selectedWeight);
+      const priceFactor = getWeightFactor(item.selectedWeight, item.product.category);
       const itemPrice = item.product.price * priceFactor;
       return acc + (itemPrice * item.quantity);
     }, 0);

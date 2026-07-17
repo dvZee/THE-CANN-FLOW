@@ -119,7 +119,7 @@ export default function Checkout() {
       address: address.trim(),
       zone: delivery.name,
       items: cart.map(item => {
-        const priceFactor = getWeightFactor(item.selectedWeight);
+        const priceFactor = getWeightFactor(item.selectedWeight, item.product.category);
         
         return {
           name: item.product.name,
@@ -358,6 +358,7 @@ Please confirm my delivery, thank you!`;
               <label className="form-label">Full Name</label>
               <input
                 type="text"
+                name="name"
                 className="form-input"
                 placeholder="e.g. John Doe"
                 required
@@ -370,6 +371,7 @@ Please confirm my delivery, thank you!`;
               <label className="form-label">Phone & Text Number (For verification)</label>
               <input
                 type="tel"
+                name="phone"
                 className="form-input"
                 placeholder="e.g. 416 456 7759"
                 required
@@ -401,6 +403,7 @@ Please confirm my delivery, thank you!`;
             <div className="form-group">
               <label className="form-label">Delivery Address</label>
               <textarea
+                name="address"
                 className="form-textarea"
                 rows={3}
                 placeholder="Apt/Suite, street address, intersection details..."
@@ -469,7 +472,7 @@ Please confirm my delivery, thank you!`;
               
               <div style={{ maxHeight: "250px", overflowY: "auto", display: "grid", gap: "0.75rem", borderBottom: "1px solid var(--border-color)", paddingBottom: "1rem", marginBottom: "1rem" }}>
                {cart.map((item, idx) => {
-                  const priceFactor = getWeightFactor(item.selectedWeight);
+                  const priceFactor = getWeightFactor(item.selectedWeight, item.product.category);
                   
                   const itemPrice = item.product.price * priceFactor;
                   const itemTotal = itemPrice * item.quantity;

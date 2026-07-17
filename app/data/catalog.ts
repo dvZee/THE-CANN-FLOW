@@ -222,7 +222,35 @@ export const INITIAL_PRODUCTS: Product[] = [
   }
 ];
 
-export const getWeightFactor = (weight: string): number => {
+export const getWeightFactor = (weight: string, category?: string): number => {
+  if (category) {
+    const catLower = category.toLowerCase();
+    
+    // Flower categories scale: Hybrid, Indica, Sativa
+    if (catLower === "hybrid" || catLower === "indica" || catLower === "sativa") {
+      switch (weight) {
+        case "3.5g": return 0.55;
+        case "7g": return 1.0;
+        case "14g": return 1.8;
+        case "28g": return 3.2;
+        default: return 1.0;
+      }
+    }
+    
+    // Vape categories scale: Vapes
+    if (catLower === "vapes") {
+      switch (weight) {
+        case "0.5g": return 0.6;
+        case "1g": return 1.0;
+        default: return 1.0;
+      }
+    }
+    
+    // Non-scaling categories (Concentrates, Edibles, Topicals, Pre-rolls)
+    return 1.0;
+  }
+
+  // Fallback to old behavior if category is not provided
   switch (weight) {
     case "3.5g": return 0.55;
     case "7g": return 1.0;
@@ -233,3 +261,4 @@ export const getWeightFactor = (weight: string): number => {
     default: return 1.0;
   }
 };
+

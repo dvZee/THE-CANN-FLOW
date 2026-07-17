@@ -279,6 +279,39 @@ export default function Admin() {
     setIsModalOpen(true);
   };
 
+  // Handle category selection change to auto-update form defaults (if not editing an existing product)
+  const handleCategoryChange = (cat: string) => {
+    setProdCategory(cat);
+    if (!editingProduct) {
+      const catLower = cat.toLowerCase();
+      if (catLower === "hybrid" || catLower === "indica" || catLower === "sativa") {
+        setProdWeight("7g");
+        setProdWeightsText("3.5g, 7g, 14g, 28g");
+        setProdThc("25.00%");
+      } else if (catLower === "vapes") {
+        setProdWeight("1g");
+        setProdWeightsText("0.5g, 1g");
+        setProdThc("80.00%");
+      } else if (catLower === "concentrates") {
+        setProdWeight("3.5g");
+        setProdWeightsText("3.5g");
+        setProdThc("75.00%");
+      } else if (catLower === "pre-rolls") {
+        setProdWeight("3 x 0.5g");
+        setProdWeightsText("3 x 0.5g, 5 x 0.5g");
+        setProdThc("24.00%");
+      } else if (catLower === "edibles") {
+        setProdWeight("40g");
+        setProdWeightsText("40g");
+        setProdThc("10mg");
+      } else if (catLower === "topicals") {
+        setProdWeight("1.8oz");
+        setProdWeightsText("1.8oz");
+        setProdThc("");
+      }
+    }
+  };
+
   // Handle Product Form Submit
   const handleProductSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -600,7 +633,7 @@ export default function Admin() {
                   <select
                     className="form-select"
                     value={prodCategory}
-                    onChange={(e) => setProdCategory(e.target.value)}
+                    onChange={(e) => handleCategoryChange(e.target.value)}
                   >
                     <option value="Hybrid">Hybrid</option>
                     <option value="Indica">Indica</option>

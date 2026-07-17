@@ -36,7 +36,7 @@ export default function ProductDetail({ loaderData }: Route.ComponentProps) {
   const [selectedVariant, setSelectedVariant] = useState<string>("");
   const [qty, setQty] = useState(1);
 
-  const factor = getWeightFactor(selectedWeight);
+  const factor = getWeightFactor(selectedWeight, product.category);
   const currentPrice = Number((product.price * factor).toFixed(2));
   const originalPrice = product.originalPrice ? Number((product.originalPrice * factor).toFixed(2)) : undefined;
   
