@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Netlify Forms Detector</title>
+</head>
+<body>
+  <!-- Hidden Form for Netlify Build Bot Detection in Single-Page App -->
+  <form name="checkout-order" data-netlify="true" netlify-honeypot="bot-field" hidden>
+    <input type="hidden" name="form-name" value="checkout-order" />
+    <input type="text" name="name" />
+    <input type="tel" name="phone" />
+    <textarea name="address"></textarea>
+    <input type="text" name="zone" />
+    <input type="text" name="orderType" />
+    <input type="text" name="paymentMethod" />
+    <textarea name="orderDetails"></textarea>
+    <input type="text" name="total" />
+    <textarea name="notes"></textarea>
+    <input type="email" name="to_email" />
+    <input type="email" name="recipient" />
+  </form>
+
+  <form name="contact" data-netlify="true" netlify-honeypot="bot-field" hidden>
+    <input type="hidden" name="form-name" value="contact" />
+    <input type="text" name="name" />
+    <input type="email" name="email" />
+    <textarea name="message"></textarea>
+  </form>
+</body>
+</html>
