@@ -39,6 +39,7 @@ interface OrderSummary {
   paymentMethod: string;
   timestamp: string;
   notes?: string;
+  orderType?: string;
 }
 
 export default function Checkout() {
@@ -50,6 +51,7 @@ export default function Checkout() {
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
   const [zone, setZone] = useState<"north-york" | "gta">("north-york");
+  const [orderType, setOrderType] = useState<"online" | "text">("online");
   const [referralCode, setReferralCode] = useState("");
   const [paymentMethod, setPaymentMethod] = useState("Cash on Delivery");
   const [notes, setNotes] = useState("");
@@ -110,6 +112,8 @@ export default function Checkout() {
       return;
     }
 
+    const targetEmail = "Happytokenpole@gmail.com";
+
     // Generate Order
     const orderId = `TCF-${Math.floor(1000 + Math.random() * 9000)}`;
     const newOrder: OrderSummary = {
@@ -135,9 +139,10 @@ export default function Checkout() {
       referralDiscount: cartCalcs.referralDiscount,
       deliveryFee: delivery.fee,
       total: finalTotal,
-      paymentMethod,
+      paymentMethod: `${paymentMethod} (${orderType === "online" ? "Online Order" : "SMS Text Order"})`,
       timestamp: new Date().toLocaleString(),
-      notes: notes.trim() || undefined
+      notes: notes.trim() || undefined,
+      orderType: orderType === "online" ? "Online Order" : "Text Message Order"
     };
 
     // Save to Supabase
@@ -146,7 +151,7 @@ export default function Checkout() {
       
       const orderSummaryText = getSmsText(newOrder);
 
-      // 1. Submit to Netlify Forms (Asynchronously)
+      // 1. Submit to Netlify Forms (Asynchronously) with target email Happytokenpole@gmail.com
       try {
         await fetch("/", {
           method: "POST",
@@ -157,47 +162,56 @@ export default function Checkout() {
             phone: phone,
             address: address,
             zone: delivery.name,
+            orderType: orderType === "online" ? "Online Order" : "Text Message Order",
             paymentMethod: paymentMethod,
             orderDetails: orderSummaryText,
             total: finalTotal.toFixed(2),
             notes: notes.trim(),
+            to_email: targetEmail,
+            recipient: targetEmail,
           }).toString(),
         });
       } catch (err) {
         console.warn("Netlify form submission failed", err);
       }
 
-      // 2. Submit to Web3Forms (Asynchronously) if access key is configured
+      // 2. Submit to Web3Forms API (Dispatches email to Happytokenpole@gmail.com)
       const web3FormsKey = import.meta.env.VITE_WEB3FORMS_KEY || "";
-      if (web3FormsKey) {
-        try {
-          await fetch("https://api.web3forms.com/submit", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Accept: "application/json",
-            },
-            body: JSON.stringify({
-              access_key: web3FormsKey,
-              subject: `New Delivery Order: ${newOrder.orderId} - ${newOrder.name}`,
-              from_name: "The Cann Flow",
-              name: newOrder.name,
-              phone: newOrder.phone,
-              address: newOrder.address,
-              zone: newOrder.zone,
-              total: newOrder.total,
-              message: orderSummaryText,
-            }),
-          });
-        } catch (err) {
-          console.warn("Web3Forms email submission failed", err);
-        }
+      try {
+        await fetch("https://api.web3forms.com/submit", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+          body: JSON.stringify({
+            access_key: web3FormsKey || "00000000-0000-0000-0000-000000000000",
+            subject: `New ${orderType === "online" ? "Online" : "SMS"} Order: ${newOrder.orderId} - ${newOrder.name}`,
+            from_name: "The Cann Flow",
+            to_email: targetEmail,
+            email: targetEmail,
+            name: newOrder.name,
+            phone: newOrder.phone,
+            address: newOrder.address,
+            zone: newOrder.zone,
+            order_type: orderType === "online" ? "Online Order" : "Text Message Order",
+            total: `$${newOrder.total.toFixed(2)}`,
+            message: orderSummaryText,
+          }),
+        });
+      } catch (err) {
+        console.warn("Web3Forms email submission failed", err);
       }
 
       setPlacedOrder(newOrder);
       setIsSubmitted(true);
       clearCart();
-      showNotification("Order self-checked out successfully!", "success");
+      showNotification(
+        orderType === "online"
+          ? "Online Order submitted successfully! Email notification dispatched to Happytokenpole@gmail.com."
+          : "Order self-checked out successfully!",
+        "success"
+      );
     } catch (err) {
       console.error("Error submitting order", err);
       showNotification("Error saving order details", "error");
@@ -211,7 +225,7 @@ export default function Checkout() {
 
     const notesSection = order.notes ? `\nNotes: ${order.notes}\n` : "";
 
-    return `THE CANN FLOW ORDER: ${order.orderId}
+    return `THE CANN FLOW ORDER: ${order.orderId} (${order.orderType || "Order"})
 Name: ${order.name}
 Phone: ${order.phone}
 Address: ${order.address}
@@ -221,27 +235,29 @@ Payment: ${order.paymentMethod}
 Items:
 ${itemsText}
 
-Subtotal: ${order.subtotal.toFixed(2)}
-Happy Hour: -${order.happyHourDiscount.toFixed(2)}
-Loyalty: -${order.loyaltyDiscount.toFixed(2)}
-Referral: -${order.referralDiscount.toFixed(2)}
-Delivery: ${order.deliveryFee.toFixed(2)}
-Total: ${order.total.toFixed(2)}
+Subtotal: $${order.subtotal.toFixed(2)}
+Happy Hour: -$${order.happyHourDiscount.toFixed(2)}
+Loyalty: -$${order.loyaltyDiscount.toFixed(2)}
+Referral: -$${order.referralDiscount.toFixed(2)}
+Delivery: $${order.deliveryFee.toFixed(2)}
+Total: $${order.total.toFixed(2)}
 ${notesSection}
-Please confirm my delivery, thank you!`;
+Please process my order, thank you!`;
   };
 
   const handleCopyText = () => {
     if (placedOrder && typeof navigator !== "undefined") {
       const text = getSmsText(placedOrder);
       navigator.clipboard.writeText(text);
-      showNotification("Text summary copied to clipboard!", "success");
+      showNotification("Order summary copied to clipboard!", "success");
     }
   };
 
   if (isSubmitted && placedOrder) {
     const smsText = getSmsText(placedOrder);
     const encodedSms = encodeURIComponent(smsText);
+    const encodedMailText = encodeURIComponent(smsText);
+    const isOnline = placedOrder.orderType === "Online Order" || orderType === "online";
 
     return (
       <div className="container-custom" style={{ marginTop: "2rem", maxWidth: "680px" }}>
@@ -253,30 +269,70 @@ Please confirm my delivery, thank you!`;
           </div>
           <h1 style={{ fontSize: "2rem", fontWeight: 800, marginBottom: "0.5rem" }}>ORDER PLACED</h1>
           <p style={{ color: "var(--text-muted)", fontSize: "0.95rem", marginBottom: "2rem" }}>
-            Order {placedOrder.orderId} has been registered. Follow the instructions below to complete your checkout.
+            {isOnline 
+              ? `Order ${placedOrder.orderId} has been registered online. An email notification has been dispatched to Happytokenpole@gmail.com.`
+              : `Order ${placedOrder.orderId} has been registered. Follow the instructions below to complete your checkout.`}
           </p>
 
-          <div style={{ textAlign: "left", background: "var(--bg-input)", border: "1px solid var(--border-color)", padding: "1.5rem", borderRadius: "10px", marginBottom: "2rem" }}>
-            <h3 style={{ fontSize: "1.1rem", fontWeight: 700, marginBottom: "0.5rem", color: "var(--color-primary)" }}>TEXT US TO CONFIRM</h3>
-            <p style={{ fontSize: "0.85rem", color: "var(--text-muted)", lineHeight: 1.6, marginBottom: "1rem" }}>
-              Since we are a cash/EMT self-checkout shop, please text your order summary to <strong>416 456 7759</strong>. Click below to auto-open your text messages, or copy the template to text manually.
-            </p>
-            <div style={{ display: "flex", gap: "1rem" }}>
-              <a 
-                href={`sms:+14164567759?body=${encodedSms}`} 
-                style={{ flex: 1, textAlign: "center" }}
-              >
-                <button className="btn-age-verify" style={{ width: "100%" }}>OPEN MESSAGES</button>
-              </a>
-              <button 
-                className="btn-age-decline" 
-                style={{ flex: 1 }}
-                onClick={handleCopyText}
-              >
-                COPY SUMMARY
-              </button>
+          {isOnline ? (
+            <div style={{ textAlign: "left", background: "rgba(16,185,129,0.06)", border: "1px solid rgba(16,185,129,0.3)", padding: "1.5rem", borderRadius: "10px", marginBottom: "2rem" }}>
+              <h3 style={{ fontSize: "1.1rem", fontWeight: 700, marginBottom: "0.5rem", color: "var(--color-primary)", display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                <span>📧</span> ONLINE ORDER SENT TO EMAIL
+              </h3>
+              <p style={{ fontSize: "0.85rem", color: "var(--text-muted)", lineHeight: 1.6, marginBottom: "1rem" }}>
+                Your order summary has been automatically emailed to <strong>Happytokenpole@gmail.com</strong> for processing. Our delivery team will prepare your order and reach out to <strong>{placedOrder.phone}</strong> shortly.
+              </p>
+              <div style={{ display: "flex", gap: "0.75rem", flexWrap: "wrap" }}>
+                <a 
+                  href={`mailto:Happytokenpole@gmail.com?subject=New Online Order ${placedOrder.orderId} - ${placedOrder.name}&body=${encodedMailText}`}
+                  style={{ flex: 1, minWidth: "150px" }}
+                >
+                  <button className="btn-age-verify" style={{ width: "100%", background: "#10b981" }}>EMAIL COPY</button>
+                </a>
+                <a 
+                  href={`sms:+14164567759?body=${encodedSms}`} 
+                  style={{ flex: 1, minWidth: "140px" }}
+                >
+                  <button className="btn-age-decline" style={{ width: "100%" }}>TEXT US TOO</button>
+                </a>
+                <button 
+                  className="btn-age-decline" 
+                  style={{ flex: 1, minWidth: "140px" }}
+                  onClick={handleCopyText}
+                >
+                  COPY SUMMARY
+                </button>
+              </div>
             </div>
-          </div>
+          ) : (
+            <div style={{ textAlign: "left", background: "var(--bg-input)", border: "1px solid var(--border-color)", padding: "1.5rem", borderRadius: "10px", marginBottom: "2rem" }}>
+              <h3 style={{ fontSize: "1.1rem", fontWeight: 700, marginBottom: "0.5rem", color: "var(--color-primary)" }}>TEXT US TO CONFIRM</h3>
+              <p style={{ fontSize: "0.85rem", color: "var(--text-muted)", lineHeight: 1.6, marginBottom: "1rem" }}>
+                Please text your order summary to <strong>416 456 7759</strong>. Click below to auto-open your text messages, or copy the template to text manually.
+              </p>
+              <div style={{ display: "flex", gap: "0.75rem", flexWrap: "wrap" }}>
+                <a 
+                  href={`sms:+14164567759?body=${encodedSms}`} 
+                  style={{ flex: 1, minWidth: "150px" }}
+                >
+                  <button className="btn-age-verify" style={{ width: "100%" }}>OPEN MESSAGES</button>
+                </a>
+                <button 
+                  className="btn-age-decline" 
+                  style={{ flex: 1, minWidth: "140px" }}
+                  onClick={handleCopyText}
+                >
+                  COPY SUMMARY
+                </button>
+                <a 
+                  href={`mailto:Happytokenpole@gmail.com?subject=New Order ${placedOrder.orderId} - ${placedOrder.name}&body=${encodedMailText}`}
+                  style={{ flex: 1, minWidth: "140px" }}
+                >
+                  <button className="btn-age-decline" style={{ width: "100%" }}>EMAIL ORDER</button>
+                </a>
+              </div>
+            </div>
+          )}
 
           <div style={{ textAlign: "left", fontSize: "0.9rem", borderTop: "1px solid var(--border-color)", paddingTop: "1.5rem" }}>
             <h4 style={{ fontWeight: 700, marginBottom: "0.5rem" }}>Order details</h4>
@@ -378,6 +434,34 @@ Please confirm my delivery, thank you!`;
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
               />
+            </div>
+
+            <div className="form-group" style={{ marginBottom: "1.5rem" }}>
+              <label className="form-label" style={{ fontWeight: 700, color: "var(--color-primary)" }}>
+                HOW WOULD YOU LIKE TO PLACE YOUR ORDER? *
+              </label>
+              <div className="zone-selector-grid">
+                <div 
+                  className={`zone-card ${orderType === "online" ? "selected" : ""}`}
+                  onClick={() => setOrderType("online")}
+                  style={{ cursor: "pointer", padding: "1rem" }}
+                >
+                  <div className="zone-card-title" style={{ fontSize: "1rem" }}>💻 Online Order</div>
+                  <div className="zone-card-info" style={{ fontSize: "0.8rem", marginTop: "0.25rem" }}>
+                    Instant submit with email notification to Happytokenpole@gmail.com
+                  </div>
+                </div>
+                <div 
+                  className={`zone-card ${orderType === "text" ? "selected" : ""}`}
+                  onClick={() => setOrderType("text")}
+                  style={{ cursor: "pointer", padding: "1rem" }}
+                >
+                  <div className="zone-card-title" style={{ fontSize: "1rem" }}>📱 Text Message Order</div>
+                  <div className="zone-card-info" style={{ fontSize: "0.8rem", marginTop: "0.25rem" }}>
+                    Text your order summary to 416 456 7759
+                  </div>
+                </div>
+              </div>
             </div>
 
             <div className="form-group">

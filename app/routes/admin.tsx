@@ -191,8 +191,13 @@ export default function Admin() {
     if (actionData) {
       if (actionData.success) {
         setAuthError("");
+        if (actionData.message) {
+          showNotification(actionData.message, "success");
+        }
       } else {
-        setAuthError(actionData.error || "Authentication failed");
+        const errorMsg = actionData.error || "Operation failed";
+        setAuthError(errorMsg);
+        showNotification(errorMsg, "error");
       }
     }
   }, [actionData]);
@@ -569,6 +574,13 @@ export default function Admin() {
                       <td style={{ fontFamily: "var(--font-heading)", fontWeight: 700, fontSize: "1.05rem" }}>
                         {o.total.toFixed(2)}
                         <div style={{ fontSize: "0.7rem", fontWeight: "normal", color: "var(--text-muted)" }}>{o.paymentMethod}</div>
+                        {o.orderType && (
+                          <div style={{ marginTop: "0.2rem" }}>
+                            <span className="badge-status open" style={{ display: "inline-block", fontSize: "0.68rem", padding: "0.15rem 0.5rem", borderRadius: "4px", background: o.orderType.includes("Online") ? "rgba(16,185,129,0.15)" : "rgba(59,130,246,0.15)", color: o.orderType.includes("Online") ? "#10b981" : "#60a5fa", border: "1px solid rgba(255,255,255,0.1)" }}>
+                              {o.orderType}
+                            </span>
+                          </div>
+                        )}
                       </td>
                       <td>
                         <select

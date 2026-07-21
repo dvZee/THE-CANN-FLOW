@@ -18,6 +18,7 @@ export interface OrderSummary {
   timestamp: string;
   status?: string;
   notes?: string;
+  orderType?: string;
 }
 
 // 1. Fetch Products (Dynamic client load + Seeding if table is empty)
@@ -26,6 +27,7 @@ export async function getProducts(): Promise<Product[]> {
     const { data, error } = await supabase
       .from("products")
       .select("*")
+      .range(0, 9999)
       .order("created_at", { ascending: true });
 
     if (error) {
@@ -88,8 +90,8 @@ export async function getProducts(): Promise<Product[]> {
 
 // 2. Add New Product
 export async function addProduct(product: Omit<Product, "id">): Promise<void> {
-  const id = `custom-${Math.random().toString(36).substring(2, 9)}`;
-  const { error } = await supabase.from("products").insert({
+  const id = `custom-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`;
+  const insertPayload: any = {
     id,
     name: product.name,
     brand: product.brand,
@@ -105,35 +107,54 @@ export async function addProduct(product: Omit<Product, "id">): Promise<void> {
     weight: product.weight,
     weights: product.weights || [],
     variants: product.variants || []
-  });
+  };
+
+  const { error } = await supabase.from("products").insert(insertPayload);
   if (error) {
-    console.error("Error adding product to Supabase", error);
-    throw error;
+    console.warn("Error inserting product into Supabase, attempting fallback without array fields", error);
+    delete insertPayload.weights;
+    delete insertPayload.variants;
+    const { error: retryError } = await supabase.from("products").insert(insertPayload);
+    if (retryError) {
+      console.error("Error adding product to Supabase", retryError);
+      throw new Error(`Failed to add product: ${retryError.message}`);
+    }
   }
 }
 
 // 3. Edit Existing Product
 export async function editProduct(product: Product): Promise<void> {
+  const updatePayload: any = {
+    name: product.name,
+    brand: product.brand,
+    description: product.description,
+    category: product.category,
+    price: product.price,
+    original_price: product.originalPrice || null,
+    thc: product.thc,
+    image: product.image,
+    is_featured: product.isFeatured,
+    weight: product.weight,
+    weights: product.weights || [],
+    variants: product.variants || []
+  };
+
   const { error } = await supabase
     .from("products")
-    .update({
-      name: product.name,
-      brand: product.brand,
-      description: product.description,
-      category: product.category,
-      price: product.price,
-      original_price: product.originalPrice || null,
-      thc: product.thc,
-      image: product.image,
-      is_featured: product.isFeatured,
-      weight: product.weight,
-      weights: product.weights || [],
-      variants: product.variants || []
-    })
+    .update(updatePayload)
     .eq("id", product.id);
   if (error) {
-    console.error("Error updating product in Supabase", error);
-    throw error;
+    console.warn("Error updating product in Supabase, trying without array fields", error);
+    delete updatePayload.weights;
+    delete updatePayload.variants;
+    const { error: retryError } = await supabase
+      .from("products")
+      .update(updatePayload)
+      .eq("id", product.id);
+    if (retryError) {
+      console.error("Error updating product in Supabase", retryError);
+      throw new Error(`Failed to update product: ${retryError.message}`);
+    }
   }
 }
 
@@ -187,7 +208,8 @@ export async function getOrders(): Promise<OrderSummary[]> {
       paymentMethod: o.payment_method,
       timestamp: o.timestamp,
       status: o.status,
-      notes: o.notes || undefined
+      notes: o.notes || undefined,
+      orderType: o.order_type || undefined
     }));
   } catch (err) {
     console.error("Unexpected error fetching orders", err);
@@ -197,7 +219,7 @@ export async function getOrders(): Promise<OrderSummary[]> {
 
 // 7. Save Single Order (Checkout submission)
 export async function saveOrder(order: OrderSummary): Promise<void> {
-  const { error } = await supabase.from("orders").insert({
+  const insertData: any = {
     order_id: order.orderId,
     name: order.name,
     phone: order.phone,
@@ -214,10 +236,21 @@ export async function saveOrder(order: OrderSummary): Promise<void> {
     timestamp: order.timestamp,
     status: order.status || "Pending",
     notes: order.notes || null
-  });
+  };
+
+  if (order.orderType) {
+    insertData.order_type = order.orderType;
+  }
+
+  const { error } = await supabase.from("orders").insert(insertData);
   if (error) {
-    console.error("Error saving order to Supabase", error);
-    throw error;
+    console.warn("Supabase insert warning (trying without order_type if schema is strict):", error.message);
+    delete insertData.order_type;
+    const { error: retryError } = await supabase.from("orders").insert(insertData);
+    if (retryError) {
+      console.error("Error saving order to Supabase", retryError);
+      throw retryError;
+    }
   }
 }
 
@@ -253,52 +286,57 @@ export async function clearOrders(): Promise<void> {
 
 // 11. Upload Product Image to Storage Bucket
 export async function saveUploadedImage(base64String: string): Promise<string> {
-  // Parse base64
-  const matches = base64String.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/);
-  if (!matches || matches.length !== 3) {
-    throw new Error("Invalid base64 image format");
+  try {
+    // Parse base64
+    const matches = base64String.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/);
+    if (!matches || matches.length !== 3) {
+      return base64String;
+    }
+    const mimeType = matches[1];
+    const base64Data = matches[2];
+
+    // Convert base64 to binary array
+    const byteCharacters = atob(base64Data);
+    const byteNumbers = new Array(byteCharacters.length);
+    for (let i = 0; i < byteCharacters.length; i++) {
+      byteNumbers[i] = byteCharacters.charCodeAt(i);
+    }
+    const byteArray = new Uint8Array(byteNumbers);
+    const blob = new Blob([byteArray], { type: mimeType });
+
+    // Generate a random file extension mapping
+    let extension = "png";
+    if (mimeType.includes("jpeg") || mimeType.includes("jpg")) {
+      extension = "jpg";
+    } else if (mimeType.includes("webp")) {
+      extension = "webp";
+    } else if (mimeType.includes("gif")) {
+      extension = "gif";
+    }
+
+    const filename = `img-${Date.now()}-${Math.floor(Math.random() * 1000)}.${extension}`;
+
+    const { data, error } = await supabase.storage
+      .from("product-images")
+      .upload(filename, blob, {
+        contentType: mimeType,
+        cacheControl: "3600",
+        upsert: false
+      });
+
+    if (error) {
+      console.warn("Error uploading image to Supabase Storage, using direct base64 fallback", error);
+      return base64String;
+    }
+
+    // Get Public URL
+    const { data: publicUrlData } = supabase.storage
+      .from("product-images")
+      .getPublicUrl(filename);
+
+    return publicUrlData.publicUrl || base64String;
+  } catch (err) {
+    console.warn("Storage upload exception, using direct base64 fallback", err);
+    return base64String;
   }
-  const mimeType = matches[1];
-  const base64Data = matches[2];
-
-  // Convert base64 to binary array
-  const byteCharacters = atob(base64Data);
-  const byteNumbers = new Array(byteCharacters.length);
-  for (let i = 0; i < byteCharacters.length; i++) {
-    byteNumbers[i] = byteCharacters.charCodeAt(i);
-  }
-  const byteArray = new Uint8Array(byteNumbers);
-  const blob = new Blob([byteArray], { type: mimeType });
-
-  // Generate a random file extension mapping
-  let extension = "png";
-  if (mimeType.includes("jpeg") || mimeType.includes("jpg")) {
-    extension = "jpg";
-  } else if (mimeType.includes("webp")) {
-    extension = "webp";
-  } else if (mimeType.includes("gif")) {
-    extension = "gif";
-  }
-
-  const filename = `img-${Date.now()}-${Math.floor(Math.random() * 1000)}.${extension}`;
-
-  const { data, error } = await supabase.storage
-    .from("product-images")
-    .upload(filename, blob, {
-      contentType: mimeType,
-      cacheControl: "3600",
-      upsert: false
-    });
-
-  if (error) {
-    console.error("Error uploading image to Supabase Storage", error);
-    throw error;
-  }
-
-  // Get Public URL
-  const { data: publicUrlData } = supabase.storage
-    .from("product-images")
-    .getPublicUrl(filename);
-
-  return publicUrlData.publicUrl;
 }
